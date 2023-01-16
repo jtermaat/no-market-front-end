@@ -1,0 +1,19 @@
+
+Data per stock line:
+    rank
+    stockName
+    closePrice
+    score
+    change % from prior day
+
+Data on date-selected screen:
+    table of top stocks
+    tweet for date
+    search bar for stocks
+    "back" and "forward" buttons to move forward and back by one day.
+    chart demonstrating 2023 gains for different periods vs. SPY
+    Period selector
+
+Data on stock-selected screen:
+
+    

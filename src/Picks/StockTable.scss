@@ -1,0 +1,18 @@
+/* Dark Style */
+table {
+  color: #ddd;
+  background: #333;
+  font-size: 12pt;
+  border-collapse: collapse;
+}
+ thead th,tfoot th {
+  color: #aaa;
+  background: rgba(0255,255,255,.15);
+}
+caption {
+  padding:.5em;
+}
+th,td {
+  padding: .5em;
+  border: 1px solid grey;
+}
