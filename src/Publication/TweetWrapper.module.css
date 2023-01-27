@@ -1,0 +1,16 @@
+.center {
+    margin: auto;
+    width: 50%;
+}
+
+.left {
+    float: left;
+    margin: auto;
+    width: 100%;
+}
+
+.panel {
+    margin-left: 3rem;
+    margin-right: 3rem;
+
+}

@@ -1,0 +1,62 @@
+.select {
+    background-color: white;
+    height: 46px;
+    padding: 8px;
+    margin: 8px;
+}
+
+.screentop {
+    margin-top: 5rem;
+}
+
+.panel {
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.label {
+    margin-left: 1rem;
+    /* float: left; */
+    float: right;
+}
+
+* {box-sizing:border-box;} /* global + reset */
+
+
+field.text {
+    /* it's display: inline by default! */
+    display: grid; /* naturally 1 column and will stack */
+    gap: 4px;
+}
+
+field.text label {
+    font-size: 16px;
+    float: right;
+}
+
+field.text input {
+    font: inherit;
+    padding: 5px 10px;
+}
+
+field.text {
+    display: grid;
+    gap: 20px;
+    max-width: 300px; /** or some parent context to constrain it **/
+}
+
+@media (min-width: 500px) {
+    form {
+        max-width: 500px;
+    }
+    
+    field.text {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 20px;
+    }
+
+    field.text label {
+        white-space: nowrap; 
+    }
+}

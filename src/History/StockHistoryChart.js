@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +10,9 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Chart } from 'react-chartjs-2';
+import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 
 ChartJS.register(
@@ -24,7 +25,10 @@ ChartJS.register(
   Tooltip,
   Legend,
   Zoom,
+  annotationPlugin,
 );
+
+// ChartJS.register(annotationPlugin);
 
 const StockHistoryChart = (props) => {
     const labels = props.data.map(item => item.date);
@@ -33,14 +37,29 @@ const StockHistoryChart = (props) => {
     const maxScore = Math.max(...scores);
     const minScore = Math.min(...scores);
 
+    const zoomCompleteHandler = (chart) => {
+      const {min, max} = chart.chart.scales.x;
+      if (min == 0 && !props.isLoading) {
+        props.loadMoreDataHandler(chart, min, max);
+      }
+    };
+
+    const chartRef = useRef();
+    const doubleClickHandler = (event) => {
+      // console.log(getElementAtEvent(chartRef.current, event));
+      const date = labels[getElementAtEvent(chartRef.current, event)[0].index];
+      props.datePickHandler(date);
+    }
+
     const zoomOptions = {
       limits: {
+        // x: {min: !!props.zoomMin ? props.zoomMin : 'originial', max: !!props.zoomMax ? props.zoomMax : 'original', minRange: 0},
         x: {min: 'original', max: 'original', minRange: 0},
       },
       pan: {
         enabled: true,
         mode: 'x',
-        // onPanComplete: props.zoomChangeHandler,
+        onPanComplete: zoomCompleteHandler,
         drag: {
           enabled: true
         }
@@ -53,11 +72,31 @@ const StockHistoryChart = (props) => {
           enabled: true
         },
         mode: 'x',
-        // onZoomComplete: props.zoomChangeHandler
+        onZoomComplete: zoomCompleteHandler
       }
     };
 
+    const annotation = {
+      // annotations: [
+      //   {
+          type: "line",
+          mode: "vertical",
+          scaleID: "x",
+          value: props.date,
+          borderColor: 'rgb(79, 50, 52, 0.5)',
+          borderDash: [6, 6],
+          borderWidth: 2,
+          label: {
+            content: "TODAY",
+            enabled: true,
+            position: "top"
+          }
+      //   }
+      // ]
+    };
+
     const options = {
+      // annotation: ,
         responsive: true,
         animation: {
           duration: 0
@@ -71,6 +110,11 @@ const StockHistoryChart = (props) => {
             text: props.stockName,
           },
           zoom: zoomOptions,
+          annotation: {
+            annotations: {
+              annotation
+            },
+          },
         },
         elements: {
           point: {
@@ -90,6 +134,7 @@ const StockHistoryChart = (props) => {
         },
         scales: {
             x: {
+              id: 'x-id',
               position: 'bottom',
               ticks: {
                 autoSkip: true,
@@ -98,6 +143,7 @@ const StockHistoryChart = (props) => {
               },
             },
             y: {
+
               type: 'linear',
               display: true,
               position: 'left',
@@ -112,7 +158,7 @@ const StockHistoryChart = (props) => {
                 drawOnChartArea: false,
               },
             },
-          }
+          },
       };
 
       const data = {
@@ -123,7 +169,7 @@ const StockHistoryChart = (props) => {
         label: 'Close Price',
         data: values,
         borderColor: 'rgb(96, 115, 173)',
-        backgroundColor: 'rgb(96, 154, 173)',
+        backgroundColor: 'rgb(96, 115, 173)',
         yAxisID: 'y',
         },
         {
@@ -137,7 +183,7 @@ const StockHistoryChart = (props) => {
       ],
 };
 
-      return <Chart options={options} data={data} />;
+      return <Chart ref={chartRef} options={options} data={data} onDoubleClick={doubleClickHandler} />;
 }
 
 

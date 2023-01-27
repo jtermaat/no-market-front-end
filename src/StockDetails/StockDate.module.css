@@ -1,20 +1,30 @@
 .details-parent {
-    margin: 1rem;
-    padding: 2rem 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 .details-child-left {
     display: inline-block;
-    padding: 1rem 1rem;
-    vertical-align: middle;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    vertical-align: top;
     float: left;
     width: 50%;
 }
 .details-child-right {
   display: inline-block;
-  padding: 1rem 1rem;
-  vertical-align: bottom;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  vertical-align: top;
   float: right;
   width: 50%;
-  margin-top:15%;
+}
+
+.screentop {
+  margin-top: 5rem;
+}
+
+.stock-title {
+  padding-left: 4rem;
+  padding-right: 4rem;
 }
   

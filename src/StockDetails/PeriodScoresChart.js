@@ -37,8 +37,8 @@ const PeriodScoresChart = (props) => {
             y: {
               type: 'linear',
               display: true,
-              min: Math.min(0.99, ...scoreData),
-              max: Math.max(1.01, ...scoreData)
+              min: Math.min(0.975, ...scoreData),
+              max: Math.max(1.025, ...scoreData)
             },
           }
       };

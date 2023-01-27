@@ -5,9 +5,13 @@ const StockItem = (props) => {
         return Math.round(number*100)/100;
     }
 
-    let nextPeriodPercentChange = '-';
+    let nextPeriodPercentChangeClose = '-';
     if (!!props.nextPeriodClosePrice) {
-        nextPeriodPercentChange = toTwoDecimals((((props.nextPeriodClosePrice - props.closePrice) / props.closePrice)*100.0)) + '%';
+        nextPeriodPercentChangeClose = toTwoDecimals((((props.nextPeriodClosePrice - props.closePrice) / props.closePrice)*100.0)) + '%';
+    }
+    let nextPeriodPercentChangeOpen = '-';
+    if (!!props.nextPeriodSubsequentOpenPrice) {
+        nextPeriodPercentChangeOpen = toTwoDecimals((((props.nextPeriodSubsequentOpenPrice - props.nextDayOpenPrice) / props.nextDayOpenPrice) * 100.0)) + '%';
     }
 
     const clickHandler = (event) => {
@@ -20,7 +24,8 @@ const StockItem = (props) => {
             <td>{props.stockName}</td>
             <td>{toTwoDecimals(props.closePrice)}</td>
             <td>{props.score}</td>
-            <td>{nextPeriodPercentChange}</td>
+            <td>{nextPeriodPercentChangeClose}</td>
+            <td>{nextPeriodPercentChangeOpen}</td>
         </tr>
     );
 }

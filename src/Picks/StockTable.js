@@ -11,7 +11,7 @@ const StockTable = (props) => {
     const [currentPeriod, setCurrentPeriod] = useState(props.period);
 
     const loadData = (usePage=page, useData=data) => {
-        fetch('http://localhost:8080/prediction/all/' +  props.date + '/' + props.period + '/' + usePage).then(response => {
+        fetch('http://localhost:8080/prediction/all/' +  (!!props.date ? props.date : '0') + '/' + props.period + '/' + usePage).then(response => {
             return response.json();
         }).then(responseData => {
             if (responseData[0].date !== props.date) {
@@ -36,16 +36,21 @@ const StockTable = (props) => {
             loadData();
         }
     });
+    let dayClarifier = new Date();
 
     return (
         <table>
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>Stock</th>
-                    <th>Close Price</th>
-                    <th>Score</th>
-                    <th>Next {props.period}-Day % Change</th>
+                    <th rowSpan="2">Rank</th>
+                    <th rowSpan="2">Stock</th>
+                    <th rowspan="2">Close Price</th>
+                    <th rowSpan="2">Score on {props.date}</th>
+                    <th colSpan="2">Next {props.period}-Day % Change</th>
+                </tr>
+                <tr>
+                    <th>Close-to-Close</th>
+                    <th>Open-to-Open</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,8 +61,10 @@ const StockTable = (props) => {
                         id={item.id}
                         stockName={item.stockName}
                         closePrice={item.closePrice}
+                        nextDayOpenPrice={item.nextDayOpenPrice}
                         score={item.score}
                         nextPeriodClosePrice={item.nextPeriodClosePrice}
+                        nextPeriodSubsequentOpenPrice={item.nextPeriodSubsequentOpenPrice}
                         stockSelectedHandler={props.stockSelectedHandler}
                     />))}
             </tbody>

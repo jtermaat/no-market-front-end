@@ -1,24 +1,32 @@
-
-
-  
-  /* Page content */
-  .content {
-    padding: 16px;
-  }
-  
-  /* The sticky class is added to the navbar with JS when it reaches its scroll position */
-  .sticky {
+  /* Style the navbar */
+  .navbar {
+    /* overflow: hidden; */
+    overflow: visible;
+    background-color: black;
     position: fixed;
+    height: 60px;
     top: 0;
-    width: 100%;
+    width: 1080px;
+    border-bottom: 1px solid #444;
+    /* max-width: 2160px; */
   }
   
-  /* Add some top padding to the page content to prevent sudden quick movement (as the navigation bar gets a new position at the top of the page (position:fixed and top:0) */
-  .sticky + .content {
-    padding-top: 60px;
+  /* Navbar links */
+.navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
   }
 
-.details-child-30 {
+  /* .details-parent {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  } */
+
+  .details-child-30 {
     display: inline-block;
     /* float: left; */
     width: 20%;
@@ -53,25 +61,13 @@
 
 .banner {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
     vertical-align: top;
-    padding-top: 1rem;
+    /* padding-top: 0.5rem; */
+    padding-top: 0.75rem;
+
     margin-top: 0px;
+    /* padding-left: 1rem; */
     padding-left: 3rem;
     color: white;
 }
-
-.screentop {
-  margin-top: 5rem;
-}
-
-.centertext {
-  text-align: center;
-}
-
-.panel {
-  margin-left: 3rem;
-  margin-right: 3rem;
-}
-
-
- 

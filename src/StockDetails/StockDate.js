@@ -17,7 +17,7 @@ const StockDate = (props) => {
         fetch('http://localhost:8080/prediction/stock/' + props.stockName + '/' + props.date).then(response => {
             return response.json();
         }).then(responseData => {
-            setPeriodData(responseData);
+            setPeriodData(responseData.sort((a,b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
             setIsLoadingPeriods(false);
         });
     }
@@ -54,14 +54,20 @@ const StockDate = (props) => {
     // });
 
     return (
-        <div className={`${styles['details-parent']}`}>
-            <div className={`${styles['details-child-left']}`}>
-                {!isLoadingDetails && <StockDetails data={detailData} /> }
+        <React.Fragment>
+            <div className={`${styles.screentop} ${styles['stock-title']}`}>
+            <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
             </div>
-            <div className={`${styles['details-child-right']}`}>
-                {!isLoadingPeriods && <PeriodScoresChart data={periodData} /> }
-            </div>  
-        </div>
+        
+            <div className={`${styles['details-parent']}`}>
+                <div className={`${styles['details-child-left']}`}>
+                    {!isLoadingDetails && <StockDetails data={detailData} /> }
+                </div>
+                <div className={`${styles['details-child-right']}`}>
+                    {!isLoadingPeriods && <PeriodScoresChart data={periodData} /> }
+                </div>  
+            </div>
+        </React.Fragment>
     );
 };
 
