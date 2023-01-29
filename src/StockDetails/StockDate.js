@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import fontawesome from '@fortawesome/fontawesome';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import PeriodScoresChart from './PeriodScoresChart';
 import StockDetails from './StockDetails';
 import styles from './StockDate.module.css';
@@ -10,6 +13,8 @@ const StockDate = (props) => {
     const [isLoadingPeriods, setIsLoadingPeriods] = useState(true);
     const [detailData, setDetailData] = useState({});
     const [isLoadingDetails, setIsLoadingDetails] = useState(true);
+
+    fontawesome.library.add(faCircleNotch);
 
     const loadPeriodData = () => {
         // const realDate = !props.date ? null : props.date.getFullYear() + "-" + props.date.getMonth() + "-" + props.date.getDate();
@@ -55,17 +60,22 @@ const StockDate = (props) => {
 
     return (
         <React.Fragment>
-            <div className={`${styles.screentop} ${styles['stock-title']}`}>
-            <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
-            </div>
+            <div>
+            {!isLoadingDetails && <div className={`${styles.screentop} ${styles['stock-title']}`}> 
+                <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
+            </div> }
+            {!!isLoadingDetails && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
         
             <div className={`${styles['details-parent']}`}>
                 <div className={`${styles['details-child-left']}`}>
                     {!isLoadingDetails && <StockDetails data={detailData} /> }
+                    {!!isLoadingDetails && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
                 </div>
                 <div className={`${styles['details-child-right']}`}>
                     {!isLoadingPeriods && <PeriodScoresChart data={periodData} /> }
+                    {!!isLoadingPeriods && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
                 </div>  
+            </div>
             </div>
         </React.Fragment>
     );

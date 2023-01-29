@@ -77,13 +77,11 @@ const StockHistoryChart = (props) => {
     };
 
     const annotation = {
-      // annotations: [
-      //   {
           type: "line",
           mode: "vertical",
           scaleID: "x",
           value: props.date,
-          borderColor: 'rgb(79, 50, 52, 0.5)',
+          borderColor: 'rgb(147, 64, 108)',
           borderDash: [6, 6],
           borderWidth: 2,
           label: {
@@ -91,8 +89,23 @@ const StockHistoryChart = (props) => {
             enabled: true,
             position: "top"
           }
-      //   }
-      // ]
+    };
+
+    const annotation2 = {
+      type: 'box',
+      backgroundColor: 'rgba(147, 64, 108, 0.2)',
+      borderWidth: 0,
+      xMax: Number(labels.indexOf(props.date)) + Number(props.period),
+      xMin: labels.indexOf(props.date),
+      label: {
+        drawTime: 'afterDraw',
+        display: false,
+        content: `${props.period} Market Days`,
+        position: {
+          x: 'center',
+          y: 'start'
+        }
+      }
     };
 
     const options = {
@@ -111,9 +124,10 @@ const StockHistoryChart = (props) => {
           },
           zoom: zoomOptions,
           annotation: {
-            annotations: {
-              annotation
-            },
+            annotations: [
+              annotation,
+              annotation2
+            ],
           },
         },
         elements: {
@@ -168,16 +182,16 @@ const StockHistoryChart = (props) => {
         type: 'line',
         label: 'Close Price',
         data: values,
-        borderColor: 'rgb(96, 115, 173)',
-        backgroundColor: 'rgb(96, 115, 173)',
+        borderColor: 'rgb(64, 66, 147)',
+        backgroundColor: 'rgb(64, 66, 147)',
         yAxisID: 'y',
         },
         {
         type: 'bar',
         label: props.period + '-Day Score',
         data: scores,
-        borderColor: 'rgb(115, 173, 96)',
-        backgroundColor: 'rgba(115, 173, 96, 0.5)',
+        borderColor: 'rgb(64, 147, 103)',
+        backgroundColor: 'rgba(64, 147, 103, 0.5)',
         yAxisID: 'y1',
         }
       ],

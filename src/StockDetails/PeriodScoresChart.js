@@ -49,7 +49,7 @@ const PeriodScoresChart = (props) => {
             {
                 label: 'All Period Scores',
                 data: scoreData,
-                backgroundColor: 'rgba(113, 103, 46, 0.5)',
+                backgroundColor: 'rgba(147, 145, 64, 0.5)',
             },
         ],
     };

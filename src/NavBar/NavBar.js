@@ -5,7 +5,8 @@ const NavBar = (props) => {
     return (
         <div className={`${styles.navbar} ${styles['details-parent']}`}>
                     <div className={`${styles['details-child-40']}`}>
-                        <h3 className={`${styles.banner}`}><b>stockgenius.ai</b></h3>
+                        {/* <h3 className={`${styles.banner}`}><b>stocklist.ai</b></h3> */}
+                        <h4 className={`${styles.banner}`}>O Market, Where Art Thou?</h4>
                     </div>
                 {/* <div className={`${styles['new-expense__control']}`}> */}
                         {/* <label>Date</label> */}

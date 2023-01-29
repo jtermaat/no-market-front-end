@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import StockHistoryChart from './StockHistoryChart';
+import fontawesome from '@fortawesome/fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from './StockHistoryComponent.module.css';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
 const StockHistoryComponent = (props) => {
     const [currentStock, setCurrentStock] = useState(props.stockName);
@@ -11,6 +14,8 @@ const StockHistoryComponent = (props) => {
     const [zoomMin, setZoomMin] = useState(0);
     const [zoomMax, setZoomMax] = useState(250);
     const [needsMoreData, setNeedsMoreData] = useState(false);
+
+    fontawesome.library.add(faCircleNotch);
 
 
     const loadData = (usePage=page, useData=data) => {
@@ -37,7 +42,7 @@ const StockHistoryComponent = (props) => {
                 return response.json();
             }).then(responseData => {
                 setPage(page + 1);
-                setData([...responseData.reverse(0), ...data]);
+                setData([...responseData.reverse(), ...data]);
                 setNeedsMoreData(false);
             });
         }
@@ -57,7 +62,7 @@ const StockHistoryComponent = (props) => {
 
     return (
         <React.Fragment>
-            <StockHistoryChart stockName={props.stockName} 
+            {!isLoading && <StockHistoryChart stockName={props.stockName} 
                                     data={data} 
                                     isLoading={needsMoreData}
                                     period={props.period}
@@ -65,7 +70,8 @@ const StockHistoryComponent = (props) => {
                                     zoomMin={zoomMin}
                                     zoomMax={zoomMax}
                                     date={props.date}
-                                    datePickHandler={props.datePickHandler} />
+                                    datePickHandler={props.datePickHandler} /> }
+            {!!isLoading && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
             {/* <div className={`${styles['btn-group']}`}>
                 <button onClick={loadMoreDataHandler}>Load More</button>
             </div> */}
