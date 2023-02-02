@@ -13,7 +13,7 @@ const PerformancePanel = (props) => {
     return (
         <div className={`${styles.screentop} ${styles.panel}`}>
             <h2><b>Performance Simulation</b></h2>
-            <p>The simulation works by buying the top <i>n</i> picks each day, and holding them for <i>p</i> days before selling (<i>p</i> = <i>period</i>).  This means the portfolio will be split into <i>p</i> parts in order to buy and sell each day.  The portfolio can contain up to <i>n</i> x <i>p</i> stocks at any one time.  Click on a node to jump to the stock picks for that date.</p>
+            <p>The simulation works by buying the top <i>n</i> picks each day, and holding them for <i>p</i> days before selling (<i>p</i> = <i>period</i>).  This means the portfolio will be split into <i>p</i> parts in order to buy and sell each day.  The portfolio can contain up to <i>n</i> x <i>p</i> stocks at any one time.</p>
             <field className={`${styles.text}`}>
                 <label for="numPicks" className={`${styles.label}`}>Number of picks (<i>n</i>): </label>
                 <select className={`${styles.select}`} 
@@ -38,7 +38,12 @@ const PerformancePanel = (props) => {
                     <option value="100">100</option>     
                 </select>
             </field>
-            <PerformanceChart period={props.period} numPicks={numPicks} datePickHandler={props.datePickHandler} type="c" />
+            <PerformanceChart period={props.period} 
+                            numPicks={numPicks} 
+                            datePickHandler={props.datePickHandler} 
+                            type="c"
+                            onStartedLoadingPerformance={props.onStartedLoadingPerformance}
+                            onDoneLoadingPerformance={props.onDoneLoadingPerformance}/>
         </div>
     );
 }

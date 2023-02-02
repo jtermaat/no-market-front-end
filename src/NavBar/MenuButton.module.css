@@ -45,6 +45,39 @@ a.menuitem {
     background-color: #8A8968;
 }
 
+/* .menuitem-green {
+  background-color: #CDE9DB;
+}
+
+.menuitem-green:hover {
+  background-color: #97ADA2;
+}
+
+.menuitem-blue {
+  background-color: #CDCDE9;
+}
+
+.menuitem-blue:hover {
+  background-color:#9797AD;
+}
+
+.menuitem-red {
+  background-color: #E9CDDB;
+}
+
+.menuitem-red:hover {
+  background-color: #AD97A2;
+}
+
+
+.menuitem-yellow {
+  background-color: #E9E9CD;
+}
+
+.menuitem-yellow:hover {
+  background-color: #ADAD97;
+} */
+
 .dropbtn {
     background-color: black;
     /* color: white; */

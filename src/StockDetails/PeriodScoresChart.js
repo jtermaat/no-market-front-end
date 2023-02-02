@@ -20,8 +20,18 @@ ChartJS.register(
 );
 
 const PeriodScoresChart = (props) => {
-    const labels = props.data.map(a => a.period + ' Day');
-    const scoreData = props.data.map(a => a.score);
+    const labels = props.data.map(a => a.period); // + ' Day');
+    const scoreData = props.data.map(a => (a.score-1.0) * 1000.0);
+
+    // const scoreDataMax = Math.max(...scoreData);
+    // const scoreDataMin = Math.min(...scoreData);
+    // let scaleMin = 0;
+    // if (scoreDataMin < 0) {
+    //   scaleMin = Math.max(Math.abs(scoreDataMin), Math.abs(scoreDataMax)) * -1;
+    // } 
+    const scaleMax = Math.max(25, ...scoreData);
+    const scaleMin = Math.min(...scoreData) < 0 ? Math.min(-5, ...scoreData) : 0;
+
 
     const options = {
         responsive: true,
@@ -37,9 +47,13 @@ const PeriodScoresChart = (props) => {
             y: {
               type: 'linear',
               display: true,
-              min: Math.min(0.975, ...scoreData),
-              max: Math.max(1.025, ...scoreData)
+              min: scaleMin,
+              max: scaleMax,
             },
+            x: {
+              display: true,
+              label: '(Days)',
+            }
           }
       };
 

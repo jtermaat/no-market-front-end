@@ -4,6 +4,7 @@ import fontawesome from '@fortawesome/fontawesome';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import PeriodScoresChart from './PeriodScoresChart';
 import StockDetails from './StockDetails';
+import Spinner from '../Common/Spinner';
 import styles from './StockDate.module.css';
 
 const StockDate = (props) => {
@@ -14,27 +15,29 @@ const StockDate = (props) => {
     const [detailData, setDetailData] = useState({});
     const [isLoadingDetails, setIsLoadingDetails] = useState(true);
 
-    fontawesome.library.add(faCircleNotch);
-
     const loadPeriodData = () => {
         // const realDate = !props.date ? null : props.date.getFullYear() + "-" + props.date.getMonth() + "-" + props.date.getDate();
-        setIsLoadingPeriods(true);
+        // setIsLoadingPeriods(true);
+        props.onStartedLoadingPeriods();
         fetch('http://localhost:8080/prediction/stock/' + props.stockName + '/' + props.date).then(response => {
             return response.json();
         }).then(responseData => {
             setPeriodData(responseData.sort((a,b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
             setIsLoadingPeriods(false);
+            props.onDoneLoadingPeriods();
         });
     }
 
     const loadDetailData = () => {
         setIsLoadingDetails(true);
+        props.onStartedLoadingDetails();
         fetch('http://localhost:8080/stock-details/' + props.stockName).then(response => {
             return response.json();
         }).then(responseData => {
             console.log(responseData);
             setDetailData(responseData);
-            setIsLoadingDetails(false);
+            // setIsLoadingDetails(false);
+            props.onDoneLoadingDetails();
         });
     }
 
@@ -61,19 +64,19 @@ const StockDate = (props) => {
     return (
         <React.Fragment>
             <div>
-            {!isLoadingDetails && <div className={`${styles.screentop} ${styles['stock-title']}`}> 
+            <div className={`${styles.screentop} ${styles['stock-title']}`}> 
+            {/* {!!isLoadingDetails && <Spinner />} */}
                 <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
-            </div> }
-            {!!isLoadingDetails && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
+            </div> 
         
             <div className={`${styles['details-parent']}`}>
                 <div className={`${styles['details-child-left']}`}>
-                    {!isLoadingDetails && <StockDetails data={detailData} /> }
-                    {!!isLoadingDetails && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
+                    {/* {!!isLoadingDetails && <Spinner />} */}
+                    <StockDetails data={detailData} />
                 </div>
                 <div className={`${styles['details-child-right']}`}>
-                    {!isLoadingPeriods && <PeriodScoresChart data={periodData} /> }
-                    {!!isLoadingPeriods && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
+                    <PeriodScoresChart data={periodData} />
+                    {/* {!!isLoadingPeriods && <Spinner /> } */}
                 </div>  
             </div>
             </div>

@@ -1,3 +1,4 @@
+import styles from './StockItem.module.css';
 
 const StockItem = (props) => {
 
@@ -19,7 +20,7 @@ const StockItem = (props) => {
     }
     
     return (
-        <tr onClick={clickHandler}>
+        <tr className={props.selectedStock==props.stockName ? styles.selected : ''} onClick={clickHandler}>
             <td>{props.rank}</td>
             <td>{props.stockName}</td>
             <td>{toTwoDecimals(props.closePrice)}</td>

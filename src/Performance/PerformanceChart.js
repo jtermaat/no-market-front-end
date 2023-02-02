@@ -32,6 +32,10 @@ const PerformanceChart = (props) => {
     const [page, setPage] = useState(0);
     const [error, setError] = useState(false);
 
+    // let isWaiting = useRef(false);
+
+    let needsData = useRef(true);
+
     const [baselineRawData, setBaselineRawData] = useState([]);
     // const [chartMin, setChartMin] = useState(0);
     // const [chartMax, setChartMax] = useState(250);
@@ -91,6 +95,7 @@ const PerformanceChart = (props) => {
 
 
     const loadData = () => {
+        props.onStartedLoadingPerformance();
         const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + 0).then(response => {
             return response.json();
         });
@@ -102,8 +107,12 @@ const PerformanceChart = (props) => {
         setBaselineRawData(responseData2.slice(props.period).reverse());
         setPage(1);
         setError(false);
+        props.onDoneLoadingPerformance();
+        needsData.current = false;
       }).catch(error => {
         setError(true);
+        props.onDoneLoadingPerformance();
+        needsData.current = false;
       });
         
         // .then(responseData => {
@@ -124,6 +133,12 @@ const PerformanceChart = (props) => {
         //     setError(true);
         // });
     }
+
+    useEffect(() => {
+      if (needsData.current) {
+        loadData();
+      }
+    });
 
     const loadMoreData = (chart) => {
         const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + page).then(response => {
@@ -149,8 +164,8 @@ const PerformanceChart = (props) => {
 
 
         
-    if ((rawData.length === 0 && !error) || rawData[0].numPicks != props.numPicks) {
-        loadData();
+    if ((rawData.length === 0 && !error) || rawData[0].numPicks != props.numPicks || rawData[0].period != props.period) {
+      needsData.current=true;  
     } 
 
 
@@ -223,6 +238,13 @@ const PerformanceChart = (props) => {
             text: props.stockName,
           },
           zoom: zoomOptions,
+          tooltip: {
+            callbacks: {
+              beforeTitle: function () {
+                return "Zoom and pan | Click a node to jump to date";
+              }
+            }
+          }
         },
         elements: {
           point: {

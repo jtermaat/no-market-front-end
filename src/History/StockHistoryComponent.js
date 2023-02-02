@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import StockHistoryChart from './StockHistoryChart';
-import fontawesome from '@fortawesome/fontawesome';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from './StockHistoryComponent.module.css';
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import Spinner from '../Common/Spinner';
 
 const StockHistoryComponent = (props) => {
     const [currentStock, setCurrentStock] = useState(props.stockName);
@@ -14,20 +11,29 @@ const StockHistoryComponent = (props) => {
     const [zoomMin, setZoomMin] = useState(0);
     const [zoomMax, setZoomMax] = useState(250);
     const [needsMoreData, setNeedsMoreData] = useState(false);
+    const [needsData, setNeedsData] = useState(true);
 
-    fontawesome.library.add(faCircleNotch);
+    let isWaiting = useRef(false);
 
-
-    const loadData = (usePage=page, useData=data) => {
+    const loadData = () => {
+        // setNeedsData(false);
         // setIsLoading(true);
-        fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + usePage).then(response => {
-            return response.json();
-        }).then(responseData => {
-            setPage(usePage + 1);
-            setData([...responseData.reverse(), ...useData]);
-            setIsLoading(false);
-            // setNeedsMoreData(false);
-        });
+        if (!isWaiting.current) {
+            isWaiting.current = true;
+            fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + 0).then(response => {
+                return response.json();
+            }).then(responseData => {
+                setPage(1);
+                setData([...responseData.reverse()]);
+                setIsLoading(false);
+                // setNeedsData(false);
+                props.onDoneLoadingHistory();
+                setNeedsData(false);
+                isWaiting.current = false;
+                
+                // setNeedsMoreData(false);
+            });
+        }
     } 
 
     const loadMoreDataHandler = (chart, min, max) => {
@@ -46,35 +52,38 @@ const StockHistoryComponent = (props) => {
                 setNeedsMoreData(false);
             });
         }
-        if (data.length === 0) {
-            loadData();
-        }
+        // if (data.length === 0) {
+        // if (needsData) {
+        //     loadData();
+        // }
     });
 
     if (currentStock !== props.stockName || currentPeriod !== props.period) {
         setCurrentStock(props.stockName);
         setCurrentPeriod(props.period);
-        setData([]);
+        // setData([]);
+        setNeedsData(true);
+        loadData();
         setPage(0);
         setIsLoading(true);
+        props.onStartedLoadingHistory();
     }
 
 
     return (
         <React.Fragment>
-            {!isLoading && <StockHistoryChart stockName={props.stockName} 
+            <div>
+            <StockHistoryChart stockName={props.stockName} 
                                     data={data} 
-                                    isLoading={needsMoreData}
+                                    isLoading={isLoading || needsMoreData}
                                     period={props.period}
                                     loadMoreDataHandler={loadMoreDataHandler}
                                     zoomMin={zoomMin}
                                     zoomMax={zoomMax}
                                     date={props.date}
-                                    datePickHandler={props.datePickHandler} /> }
-            {!!isLoading && <FontAwesomeIcon icon="fa-solid fa-circle-notch" /> }
-            {/* <div className={`${styles['btn-group']}`}>
-                <button onClick={loadMoreDataHandler}>Load More</button>
-            </div> */}
+                                    datePickHandler={props.datePickHandler} /> 
+            {/* {!!isLoading && <Spinner /> } */}
+            </div>
         </React.Fragment>
     );
     

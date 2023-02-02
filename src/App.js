@@ -1,11 +1,12 @@
 import React from 'react'
 import StockHistoryComponent from './History/StockHistoryComponent';
 import StockDate from './StockDetails/StockDate';
-import StockTable from './Picks/StockTable';
+import StockTable from './Stocks/StockTable';
 import PerformanceChart from './Performance/PerformanceChart';
 import PerformancePanel from './Performance/PerformancePanel';
 import TweetWrapper from './Publication/TweetWrapper';
 import NavBar from './NavBar/NavBar';
+import Spinner from './Common/Spinner';
 import { useState, useRef } from 'react';
 import '../node_modules/react-datepicker/src/stylesheets/datepicker.scss'
 import styles from './App.module.css';
@@ -26,8 +27,14 @@ const SCREEN_ABOUT = 'about';
 const App = () => {
     const [selectedStock, setSelectedStock] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
-    const [period, setPeriod] = useState(10);
+    const [period, setPeriod] = useState(35);
     const [screen, setScreen] = useState(SCREEN_DATA);
+    const [isLoading, setIsLoading] = useState(false);
+
+    let loadingPeriodsRef = useRef(false);
+    let loadingDetailsRef = useRef(false);
+    let loadingHistoryRef = useRef(false);
+    let loadingPerformanceRef = useRef(false);
 
     const stockSelectedHandler = (stock) => {
         setSelectedStock(stock);
@@ -65,10 +72,66 @@ const App = () => {
     
 
     // const performanceChartClickHandler =
+    const onStartedLoadingPeriods = () => {
+        loadingPeriodsRef.current = true;
+        setIsLoading(true);
+    }
+
+    const onDoneLoadingPeriods = () => {
+        loadingPeriodsRef.current = false;
+        if (!(loadingDetailsRef.current || loadingHistoryRef.current)) {
+            setIsLoading(false);
+        }
+    }
+
+    const onStartedLoadingDetails = () => {
+        loadingDetailsRef.current = true;
+        setIsLoading(true);
+    }
+
+    const onDoneLoadingDetails = () => {
+        loadingDetailsRef.current = false;
+        if (!(loadingPeriodsRef.current || loadingHistoryRef.current)) {
+            setIsLoading(false);
+        }
+    }
+
+    const onStartedLoadingHistory = () => {
+        loadingHistoryRef.current = true;
+        setIsLoading(true);
+    }
+
+    const onDoneLoadingHistory = () => {
+        loadingHistoryRef.current = false;
+        if (!(loadingPeriodsRef.current || loadingDetailsRef.current)) {
+            setIsLoading(false);
+        }
+    }
+
+    const onStartedLoadingPerformance = () => {
+        loadingPerformanceRef.current = true;
+        setIsLoading(true);
+    }
+
+    const onDoneLoadingPerformance = () => {
+        loadingPerformanceRef.current = false;
+        setIsLoading(false);
+    }
+
+    const isDoneLoadingDataScreen = () => {
+        return !(loadingPeriodsRef.current || loadingDetailsRef.current || loadingHistoryRef.current);
+    }
+
+
+    if (isLoading && (
+        (screen == SCREEN_DATA && isDoneLoadingDataScreen()) ||
+        (screen === SCREEN_PERFORMANCE && !loadingPerformanceRef.current))) {
+        setIsLoading(false);
+    }
 
     return (
         <React.Fragment>
-            
+            {!!isLoading && <Spinner /> }
             <NavBar selectedDate={selectedDate} 
                     periodChangeHandler={periodChangeHandler}
                     dateChangeHandler={dateChangeHandler}
@@ -76,24 +139,37 @@ const App = () => {
                     dataClickHandler={dataClickHandler}
                     performanceClickHandler={performanceClickHandler}
                     aboutClickHandler={aboutClickHandler}/>
-            {!!selectedStock && screen == SCREEN_DATA && <StockDate stockName={selectedStock} date={selectedDate} />}
+            {!!selectedStock && screen == SCREEN_DATA && <StockDate stockName={selectedStock} 
+                                                                    date={selectedDate}
+                                                                    onStartedLoadingPeriods={onStartedLoadingPeriods}
+                                                                    onDoneLoadingPeriods={onDoneLoadingPeriods}
+                                                                    onStartedLoadingDetails={onStartedLoadingDetails}
+                                                                    onDoneLoadingDetails={onDoneLoadingDetails} />}
             {!!selectedStock && screen == SCREEN_DATA && <StockHistoryComponent stockName={selectedStock} 
                                                                                 period={period} 
                                                                                 date={selectedDate}
-                                                                                datePickHandler={datePickHandler} />}
+                                                                                datePickHandler={datePickHandler}
+                                                                                onDoneLoadingHistory={onDoneLoadingHistory}
+                                                                                onStartedLoadingHistory={onStartedLoadingHistory} />}
             
             {/* {!selectedStock && <PerformancePanel datePickHandler={datePickHandler} 
                                                 period={period} />} */}
             {screen == SCREEN_PERFORMANCE && <PerformancePanel datePickHandler={datePickHandler} 
-                                                period={period} />}
+                                                period={period} 
+                                                onStartedLoadingPerformance={onStartedLoadingPerformance}
+                                                onDoneLoadingPerformance={onDoneLoadingPerformance}/>}
             {!selectedStock && !!selectedDate && <div className={`${styles.screentop}`}>
-                <TweetWrapper  date={selectedDate} />
+                {/* <TweetWrapper  date={selectedDate} /> */}
             </div>}
             <div className={styles.panel} >
             {!selectedStock && <h2 className={`${styles.centertext}`}>Select a stock for details</h2>}
             </div>
 
-            <StockTable date={selectedDate} period={period} stockSelectedHandler={stockSelectedHandler} datePopulatedHandler={datePopulatedHandler} />
+            <StockTable date={selectedDate} 
+                        period={period} 
+                        selectedStock={selectedStock} 
+                        stockSelectedHandler={stockSelectedHandler} 
+                        datePopulatedHandler={datePopulatedHandler} />
 
         </React.Fragment>
     );

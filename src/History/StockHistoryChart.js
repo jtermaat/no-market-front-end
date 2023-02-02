@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,17 +33,27 @@ ChartJS.register(
 const StockHistoryChart = (props) => {
     const labels = props.data.map(item => item.date);
     const values = props.data.map(item => item.closePrice);
-    const scores = props.data.map(item => item.score);
+    const scores = props.data.map(item => (item.score-1.0)*1000.0);
     const maxScore = Math.max(...scores);
     const minScore = Math.min(...scores);
 
+    let maxRef = useRef(400);
+    let sizeRef = useRef(250);
+    let dataSizeRef = useRef(10000);
+
     const zoomCompleteHandler = (chart) => {
-      const {min, max} = chart.chart.scales.x;
-      if (min == 0 && !props.isLoading) {
-        props.loadMoreDataHandler(chart, min, max);
-      }
+        const {min, max} = chart.chart.scales.x;
+        console.log('min: ' + min + ', max: ' + max);
+        maxRef.current=max;
+        sizeRef.current=max-min;
+      // if (min == 0 && !props.isLoading) {
+        if (min < 200 && !props.isLoading) {
+          props.loadMoreDataHandler(chart, min, max);
+        }
+      
     };
 
+    // const chartRef = React.createRef();
     const chartRef = useRef();
     const doubleClickHandler = (event) => {
       // console.log(getElementAtEvent(chartRef.current, event));
@@ -51,10 +61,24 @@ const StockHistoryChart = (props) => {
       props.datePickHandler(date);
     }
 
+    useEffect(() => {
+      if (props.data.length < dataSizeRef.current) {
+        maxRef.current = 400;
+        sizeRef.current = 250;
+        chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
+      } else {
+        const dataGrowthSize = props.data.length - dataSizeRef.current;
+        if (!!chartRef.current) {
+          chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
+        }
+      }
+      dataSizeRef.current = props.data.length;
+    });
+
     const zoomOptions = {
       limits: {
         // x: {min: !!props.zoomMin ? props.zoomMin : 'originial', max: !!props.zoomMax ? props.zoomMax : 'original', minRange: 0},
-        x: {min: 'original', max: 'original', minRange: 0},
+        x: {min: 'original', max: 'original', minRange: 50},
       },
       pan: {
         enabled: true,
@@ -108,6 +132,8 @@ const StockHistoryChart = (props) => {
       }
     };
 
+    const annotations = !props.isLoading ? [annotation, annotation2] : [];
+
     const options = {
       // annotation: ,
         responsive: true,
@@ -124,11 +150,15 @@ const StockHistoryChart = (props) => {
           },
           zoom: zoomOptions,
           annotation: {
-            annotations: [
-              annotation,
-              annotation2
-            ],
+            annotations: annotations
           },
+          tooltip: {
+            callbacks: {
+              beforeTitle: function () {
+                return "Zoom and pan | Double click to jump to date";
+              }
+            }
+          }
         },
         elements: {
           point: {
