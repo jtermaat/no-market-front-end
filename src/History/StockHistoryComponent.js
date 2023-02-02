@@ -53,9 +53,9 @@ const StockHistoryComponent = (props) => {
             });
         }
         // if (data.length === 0) {
-        // if (needsData) {
-        //     loadData();
-        // }
+        if (needsData) {
+            loadData();
+        }
     });
 
     if (currentStock !== props.stockName || currentPeriod !== props.period) {

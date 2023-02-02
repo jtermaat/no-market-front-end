@@ -39,11 +39,18 @@ const StockHistoryChart = (props) => {
 
     let maxRef = useRef(400);
     let sizeRef = useRef(250);
-    let dataSizeRef = useRef(10000);
+    let dataSizeRef = useRef(400);
+
+    let lastPeriod = useRef('0');
+    let lastStock = useRef('');
+
+    let initialized = useRef(false);
 
     const zoomCompleteHandler = (chart) => {
         const {min, max} = chart.chart.scales.x;
         console.log('min: ' + min + ', max: ' + max);
+        console.log("Setting max to " + max);
+        console.log("Setting size to " + (max-min));
         maxRef.current=max;
         sizeRef.current=max-min;
       // if (min == 0 && !props.isLoading) {
@@ -62,17 +69,57 @@ const StockHistoryChart = (props) => {
     }
 
     useEffect(() => {
-      if (props.data.length < dataSizeRef.current) {
-        maxRef.current = 400;
-        sizeRef.current = 250;
-        chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
-      } else {
-        const dataGrowthSize = props.data.length - dataSizeRef.current;
-        if (!!chartRef.current) {
-          chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
-        }
-      }
-      dataSizeRef.current = props.data.length;
+      // if (!initialized.current) {
+      //   maxRef.current = 400;
+      //   sizeRef.current = 250;
+      //   chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
+      //   initialized.current = true;
+      // }
+      // if (props.data.length < dataSizeRef.current) {
+      //   maxRef.current = 400;
+      //   sizeRef.current = 250;
+      //   chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
+      // } else {
+        // if (props.data.length >= dataSizeRef.current) {
+          if (lastPeriod.current != props.period || lastStock.current != props.stockName) {
+            console.log("Setting normal bounds.");
+            maxRef.current = 400;
+            sizeRef.current = 250;
+            // dataSizeRef.current = props.data.length;
+            // dataSizeRef.current = 10000;
+            chartRef.current.zoomScale('x', {min: 150, max: 400}, 'default');
+            // dataSizeRef.current = props.data.length;
+            lastPeriod.current = props.period;
+            lastStock.current = props.stockName;
+            dataSizeRef.current = props.data.length;
+          } else { //if (props.data.length >= dataSizeRef.current) {
+            const dataGrowthSize = props.data.length - dataSizeRef.current;
+            dataSizeRef.current = props.data.length;
+            console.log("data growth size: " + dataGrowthSize);
+            if (dataGrowthSize >= 0) {
+              console.log('maxRef.current: ' + maxRef.current);
+              console.log('sizeRef.current: ' + sizeRef.current);
+              chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
+            }
+            // dataSizeRef.current = props.data.length;
+          }
+        //   const dataGrowthSize = props.data.length - dataSizeRef.current;
+        //   chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
+        //   dataSizeRef.current = props.data.length;
+        // } else if (props.data.length < dataSizeRef.current) {
+        //   console.log("Hit case 2");
+        //   maxRef.current = 400;
+        //   sizeRef.current = 250;
+        //   chartRef.current.zoomScale('x', {min: 150, max: 400}, 'default');
+        //   dataSizeRef.current = props.data.length;
+        // }
+        // const dataGrowthSize = props.data.length - dataSizeRef.current;
+        //   chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
+      // }
+      // dataSizeRef.current = props.data.length;
+      // if (props.data.length > 0) {
+      //   dataSizeRef.current = props.data.length;
+      // }
     });
 
     const zoomOptions = {

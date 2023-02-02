@@ -31,10 +31,21 @@ const PerformanceChart = (props) => {
     const [rawData, setRawData] = useState([]);
     const [page, setPage] = useState(0);
     const [error, setError] = useState(false);
+    const [needsMoreData, setNeedsMoreData] = useState(false);
+    const [loadingMoreData, setLoadingMoreData] = useState(false);
+    let loadingMoreRef = useRef(false);
 
     // let isWaiting = useRef(false);
 
+    const DEFAULT_SIZE = 50;
+    const DEFAULT_MAX = 400-props.period;
+    const DEFAULT_LOAD_THRESH = 150;
+
     let needsData = useRef(true);
+    let isWaiting = useRef(false);
+    let maxRef = useRef(DEFAULT_MAX);
+    let sizeRef = useRef(DEFAULT_SIZE);
+    let dataSizeRef = useRef(10000);
 
     const [baselineRawData, setBaselineRawData] = useState([]);
     // const [chartMin, setChartMin] = useState(0);
@@ -79,15 +90,18 @@ const PerformanceChart = (props) => {
         });
     }
 
-    const processedData = prepProcessedData(0, percentChanges);
-    const processedBaselineData = prepProcessedData(0, baselinePercentChanges);
+    const processedData = prepProcessedData(maxRef.current-sizeRef.current, percentChanges);
+    const processedBaselineData = prepProcessedData(maxRef.current-sizeRef.current, baselinePercentChanges);
 
 
     const chartRef = useRef();
     const clickHandler = (event) => {
       console.log(getElementAtEvent(chartRef.current, event));
-      const date = labels[getElementAtEvent(chartRef.current, event)[0].index];
-      props.datePickHandler(date);
+      const element = getElementAtEvent(chartRef.current, event)[0];
+      if (!!element) {
+        const date = labels[element.index];
+        props.datePickHandler(date);
+      }
     }
 
 
@@ -95,25 +109,36 @@ const PerformanceChart = (props) => {
 
 
     const loadData = () => {
+      if (!isWaiting.current) {
+        isWaiting.current = true;
         props.onStartedLoadingPerformance();
         const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + 0).then(response => {
             return response.json();
         });
         const promise2 = fetch('http://localhost:8080/performance/' + props.period + '/' + 5000 + '/' + props.type + '/' + 0).then(response => {
           return response.json();
-      });
-      Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
-        setRawData(responseData1.slice(props.period).reverse());
-        setBaselineRawData(responseData2.slice(props.period).reverse());
-        setPage(1);
-        setError(false);
-        props.onDoneLoadingPerformance();
-        needsData.current = false;
-      }).catch(error => {
-        setError(true);
-        props.onDoneLoadingPerformance();
-        needsData.current = false;
-      });
+        });
+        Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
+          setRawData(responseData1.slice(props.period).reverse());
+          setBaselineRawData(responseData2.slice(props.period).reverse());
+          setPage(1);
+          setError(false);
+          // dataSizeRef.current = 10000;
+          props.onDoneLoadingPerformance();
+          needsData.current = false;
+          isWaiting.current = false;
+          maxRef.current = DEFAULT_MAX;
+          sizeRef.current = DEFAULT_SIZE;
+          dataSizeRef.current = responseData1.slice(props.period).length;
+        }).catch(error => {
+          setError(true);
+          props.onDoneLoadingPerformance();
+          needsData.current = false;
+          isWaiting.current = false;
+          // dataSizeRef.current = 10000;
+        });
+      }
+    }
         
         // .then(responseData => {
         //     // let bounds = useRef({min: 0, max:100});
@@ -132,15 +157,56 @@ const PerformanceChart = (props) => {
         // }).catch(error => {
         //     setError(true);
         // });
-    }
+    // }
 
     useEffect(() => {
-      if (needsData.current) {
-        loadData();
+      if (needsMoreData) {
+        loadMoreData();
       }
+
+
+      // console.log("Using effect.");
+
+      if (rawData.length < dataSizeRef.current) {
+        console.log("Resetting bounds.");
+        maxRef.current = DEFAULT_MAX;
+        sizeRef.current = DEFAULT_SIZE;
+        // chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
+      } else if (rawData.length > dataSizeRef.current) {
+        console.log("Growing bounds.");
+        const dataGrowthSize = rawData.length - dataSizeRef.current;
+        console.log("Data growth size: " + dataGrowthSize);
+        if (!!chartRef.current) {
+          // maxRef.current = 
+          const percentChanges = rawData.map(item =>item.percentChange);
+          const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
+          const min = Number(maxRef.current-sizeRef.current)+Number(dataGrowthSize);
+          const max = Number(maxRef.current)+Number(dataGrowthSize);
+          // console.log("Updating processed data.");
+          chartRef.current.data.datasets[0].data = prepProcessedData(min, percentChanges);
+          chartRef.current.data.datasets[1].data = prepProcessedData(min, baselinePercentChanges);
+          chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
+          // chartRef.current.stop(); // make sure animations are not running
+          // chartRef.current.update('none');
+          
+          
+          console.log("zoomed to " + min + ", " + max);
+        }
+      } else {
+        const percentChanges = rawData.map(item =>item.percentChange);
+        const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
+        chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
+        console.log("No zoom.");
+      }
+      
+      dataSizeRef.current = rawData.length;
+      console.log("Setting data size to " + rawData.length);
+
     });
 
     const loadMoreData = (chart) => {
+        if (!loadingMoreRef.current) {
+          loadingMoreRef.current = true;
         const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + page).then(response => {
             return response.json();
         });
@@ -148,16 +214,29 @@ const PerformanceChart = (props) => {
           return response.json();
       });
         Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
+            // const {min, max} = chart.chart.scales.x;
+            
             setRawData([...responseData1.reverse(), ...rawData]);
             setBaselineRawData([...responseData2.reverse(), ...baselineRawData]);
+            // const percentChanges = rawData.map(item =>item.percentChange);
+            // const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
+            // chartRef.current.data.datasets[0].data = prepProcessedData(maxRef.current-sizeRef.current+responseData1.length, percentChanges);
+            // chartRef.current.data.datasets[1].data = prepProcessedData(maxRef.current-sizeRef.current+responseData2, baselinePercentChanges);
+            // chartRef.current.stop(); // make sure animations are not running
+            // chartRef.current.update('none');
+            // const processedData = prepProcessedData(0, percentChanges);
+            // const processedBaselineData = prepProcessedData(0, baselinePercentChanges);
             // setProcessedData(processData([...responseData.reverse(), ...rawData]));
             setPage(page+1);
+            setNeedsMoreData(false);
             // bounds.current = {min:0, max:250+250*page};
             // setChartMin(0);
             // setChartMax((1+page) * 250);
             // chart.chart.zoomScale('x', {min: bounds.current.min, max: bounds.current.max}, 'default');
             // chart.zoomScale('x', {min: -100, max: 0}, 'default');
+            loadingMoreRef.current = false;
         });
+      }
     }
 
 
@@ -165,7 +244,8 @@ const PerformanceChart = (props) => {
 
         
     if ((rawData.length === 0 && !error) || rawData[0].numPicks != props.numPicks || rawData[0].period != props.period) {
-      needsData.current=true;  
+      // needsData.current=true;  
+      loadData();
     } 
 
 
@@ -180,23 +260,46 @@ const PerformanceChart = (props) => {
 
     const zoomCompleteHandler = (chart) => {
       const {min, max} = chart.chart.scales.x;
+
+      maxRef.current=max;
+      sizeRef.current=max-min;
+      console.log("max: " + maxRef.current);
+      console.log("size: " + sizeRef.current);
+    // if (min == 0 && !props.isLoading) {
+      if (min < DEFAULT_LOAD_THRESH && !needsMoreData) {
+        // props.loadMoreDataHandler(chart, min, max);
+        // loadMoreData(chart) 
+        setNeedsMoreData(true);
+      }
+      // } else {
     //   let bounds = useRef({min: 0, max:100});
     //   bounds.current = {min: min, max: max};
-      if (min == 0) {
-        // console.log('chartMin is 0, loading data');
-       loadMoreData(chart) //, min, max);
-    //   }
-      } else {
+    //   if (min == 0) {
+    //     // console.log('chartMin is 0, loading data');
+    //    loadMoreData(chart) //, min, max);
+    // //   }
+    //   } else {
+
+        const percentChanges = rawData.map(item =>item.percentChange);
+        const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
         
         chart.chart.data.datasets[0].data = prepProcessedData(min, percentChanges);
         chart.chart.data.datasets[1].data = prepProcessedData(min, baselinePercentChanges);
         chart.chart.stop(); // make sure animations are not running
         chart.chart.update('none');
+      // }
         // setChartMin(min);
         // setChartMax(max);
         // bounds.current = {min:min, max:max};
         // const ref = useRef(initialValue)
-      }
+      // }
+
+    //   maxRef.current=max;
+    //   sizeRef.current=max-min;
+    // // if (min == 0 && !props.isLoading) {
+    //   if (min < 200) {
+    //     props.loadMoreDataHandler(chart, min, max);
+    //   }
     //   processData(percentChanges);
     };
 
