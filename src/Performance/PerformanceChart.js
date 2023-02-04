@@ -37,9 +37,9 @@ const PerformanceChart = (props) => {
 
     // let isWaiting = useRef(false);
 
-    const DEFAULT_SIZE = 50;
+    const DEFAULT_SIZE = 200;
     const DEFAULT_MAX = 400-props.period;
-    const DEFAULT_LOAD_THRESH = 150;
+    const DEFAULT_LOAD_THRESH = 200;
 
     let needsData = useRef(true);
     let isWaiting = useRef(false);

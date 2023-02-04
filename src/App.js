@@ -38,6 +38,10 @@ const App = () => {
 
     const stockSelectedHandler = (stock) => {
         setSelectedStock(stock);
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
         setScreen(SCREEN_DATA);
     };
 
@@ -52,6 +56,10 @@ const App = () => {
 
     const periodChangeHandler = (event) => {
         setPeriod(event.target.value);
+    }
+
+    const graphPeriodChangeHandler = (value) => {
+        setPeriod(value);
     }
 
     const datePickHandler = (date) => {
@@ -144,7 +152,9 @@ const App = () => {
                                                                     onStartedLoadingPeriods={onStartedLoadingPeriods}
                                                                     onDoneLoadingPeriods={onDoneLoadingPeriods}
                                                                     onStartedLoadingDetails={onStartedLoadingDetails}
-                                                                    onDoneLoadingDetails={onDoneLoadingDetails} />}
+                                                                    onDoneLoadingDetails={onDoneLoadingDetails}
+                                                                    period={period} 
+                                                                    periodChangeHandler={graphPeriodChangeHandler}/>}
             {!!selectedStock && screen == SCREEN_DATA && <StockHistoryComponent stockName={selectedStock} 
                                                                                 period={period} 
                                                                                 date={selectedDate}

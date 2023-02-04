@@ -75,7 +75,9 @@ const StockDate = (props) => {
                     <StockDetails data={detailData} />
                 </div>
                 <div className={`${styles['details-child-right']}`}>
-                    <PeriodScoresChart data={periodData} />
+                    <PeriodScoresChart data={periodData}
+                                       period={props.period}
+                                       periodChangeHandler={props.periodChangeHandler} />
                     {/* {!!isLoadingPeriods && <Spinner /> } */}
                 </div>  
             </div>
