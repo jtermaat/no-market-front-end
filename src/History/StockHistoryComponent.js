@@ -11,7 +11,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from 'chart.js/auto';
 import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
