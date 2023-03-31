@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fontawesome from '@fortawesome/fontawesome';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
@@ -8,18 +8,26 @@ import Spinner from '../Common/Spinner';
 import styles from './StockDate.module.css';
 
 const StockDate = (props) => {
-    const [stockName, setStockName] = useState('');
-    const [date, setDate] = useState(null);
+    // const [stockName, setStockName] = useState('');
+    // const [date, setDate] = useState(null);
     const [periodData, setPeriodData] = useState([]);
     const [isLoadingPeriods, setIsLoadingPeriods] = useState(true);
     const [detailData, setDetailData] = useState({});
     const [isLoadingDetails, setIsLoadingDetails] = useState(true);
 
+    let stockName = useRef('');
+    let date = useRef('');
+    let needPeriodData = useRef(false);
+    let needDetailData = useRef(false);
+    // let periodData = useRef(0);
+
     const loadPeriodData = () => {
         // const realDate = !props.date ? null : props.date.getFullYear() + "-" + props.date.getMonth() + "-" + props.date.getDate();
         // setIsLoadingPeriods(true);
         props.onStartedLoadingPeriods();
-        fetch('http://localhost:8080/prediction/stock/' + props.stockName + '/' + props.date).then(response => {
+        // fetch('http://localhost:8080/prediction/stock/' + props.stockName + '/' + props.date).then(response => {
+        fetch('https://wn5oloaa27.execute-api.us-east-1.amazonaws.com/default/getStockDate?stockName=' + props.stockName + 
+                '&date=' + props.date).then(response => {
             return response.json();
         }).then(responseData => {
             setPeriodData(responseData.sort((a,b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
@@ -31,35 +39,57 @@ const StockDate = (props) => {
     const loadDetailData = () => {
         setIsLoadingDetails(true);
         props.onStartedLoadingDetails();
-        fetch('http://localhost:8080/stock-details/' + props.stockName).then(response => {
-            return response.json();
+        // fetch('http://localhost:8080/stock-details/' + props.stockName).then(response => {
+        fetch(' https://mcgnbffws5.execute-api.us-east-1.amazonaws.com/default/getStockDetails?stockName=' + props.stockName).then(response => {
+            if (response.status == 200) {
+                return response.json();
+            } else {
+                return response;
+            }
         }).then(responseData => {
             console.log(responseData);
             setDetailData(responseData);
             // setIsLoadingDetails(false);
             props.onDoneLoadingDetails();
+        }).catch(e => {
+            console.log("ERROR!! " + e);
+            setDetailData({
+                stockName: props.stockName,
+                stockFullName: props.stockName,
+                marketCap: 0,
+                totalEmployees: 0,
+                description: `Data missing for ${props.stockName}`
+            });
+            props.onDoneLoadingDetails();
         });
     }
 
     // useEffect(() => {
-        let needPeriodData = false;
-        let needDetailData = false;
-        if (date !== props.date && props.date !== null) {
-            setDate(props.date);
-            needPeriodData = true;
+        // let needPeriodData = false;
+        // let needDetailData = false;
+        if (date.current !== props.date && props.date !== null) {
+            date.current = props.date;
+            needPeriodData.current = true;
         }
-        if (stockName !== props.stockName) {
-            setStockName(props.stockName);
-            needPeriodData = true;
-            needDetailData = true;
+        if (stockName.current !== props.stockName) {
+            // setStockName(props.stockName);
+            stockName.current = props.stockName;
+            needPeriodData.current = true;
+            needDetailData.current = true;
         }
-        if (needPeriodData) {
+
+    // });
+
+    useEffect(() => {
+        if (needPeriodData.current) {
+            needPeriodData.current = false;
             loadPeriodData();
         }
-        if (needDetailData) {
+        if (needDetailData.current) {
+            needDetailData.current = false;
             loadDetailData();
         }
-    // });
+    });
 
     return (
         <React.Fragment>

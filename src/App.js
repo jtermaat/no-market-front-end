@@ -2,15 +2,14 @@ import React from 'react'
 import StockHistoryComponent from './History/StockHistoryComponent';
 import StockDate from './StockDetails/StockDate';
 import StockTable from './Stocks/StockTable';
-import PerformanceChart from './Performance/PerformanceChart';
 import PerformancePanel from './Performance/PerformancePanel';
-import TweetWrapper from './Publication/TweetWrapper';
 import NavBar from './NavBar/NavBar';
 import Spinner from './Common/Spinner';
 import { useState, useRef } from 'react';
-import '../node_modules/react-datepicker/src/stylesheets/datepicker.scss'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+// import '../node_modules/react-datepicker/src/stylesheets/datepicker.scss'
 import styles from './App.module.css';
-import { propTypes } from 'react-bootstrap/esm/Image';
+import Explanation from './Explanation/Explanation';
 
 // import { Tweet } from 'react-twitter-widgets'
 
@@ -23,6 +22,9 @@ const SCREEN_DATA = 'data';
 const SCREEN_PERFORMANCE = 'performance';
 const SCREEN_ABOUT = 'about'; 
 
+// const router = createBrowserRouter([
+//     { path: '/', element: <DataPage /> }, 
+// ]);
 
 const App = () => {
     const [selectedStock, setSelectedStock] = useState('');
@@ -46,8 +48,6 @@ const App = () => {
     };
 
     const dateChangeHandler = (event) => {
-        // setSelectedDate(date.toISOString().split('T')[0])
-        // setSelectedDate(timeSwitch(date));
         setSelectedDate(event.target.value);
     }
     const datePopulatedHandler = (date) => {
@@ -78,8 +78,6 @@ const App = () => {
         setScreen(SCREEN_ABOUT);
     }
     
-
-    // const performanceChartClickHandler =
     const onStartedLoadingPeriods = () => {
         loadingPeriodsRef.current = true;
         setIsLoading(true);
@@ -166,20 +164,25 @@ const App = () => {
                                                 period={period} />} */}
             {screen == SCREEN_PERFORMANCE && <PerformancePanel datePickHandler={datePickHandler} 
                                                 period={period} 
+                                                date={selectedDate}
                                                 onStartedLoadingPerformance={onStartedLoadingPerformance}
                                                 onDoneLoadingPerformance={onDoneLoadingPerformance}/>}
-            {!selectedStock && !!selectedDate && <div className={`${styles.screentop}`}>
-                {/* <TweetWrapper  date={selectedDate} /> */}
-            </div>}
-            <div className={styles.panel} >
-            {!selectedStock && <h2 className={`${styles.centertext}`}>Select a stock for details</h2>}
-            </div>
 
-            <StockTable date={selectedDate} 
+            {screen == SCREEN_ABOUT && <Explanation/>}
+            {/* {!selectedStock && !!selectedDate && <div className={`${styles.screentop}`}> */}
+                {/* <TweetWrapper  date={selectedDate} /> */}
+            {/* </div>} */}
+            {/* <div className={styles.panel} >
+            {!selectedStock && <h2 className={`${styles.centertext}`}>Select a stock for details</h2>}
+            </div> */}
+            {/* {screen === SCREEN_DATA && <div className={styles.screentop} /> } */}
+
+            {(screen == SCREEN_PERFORMANCE || screen == SCREEN_DATA) && <StockTable className={screen === SCREEN_DATA ? styles.screentop : ''}
+                        date={selectedDate} 
                         period={period} 
                         selectedStock={selectedStock} 
                         stockSelectedHandler={stockSelectedHandler} 
-                        datePopulatedHandler={datePopulatedHandler} />
+                        datePopulatedHandler={datePopulatedHandler} />}
 
         </React.Fragment>
     );

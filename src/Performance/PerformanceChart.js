@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +12,8 @@ import {
 } from 'chart.js';
 import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
+import standardDeviation from './StandardDeviation';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 
 ChartJS.register(
@@ -24,7 +26,10 @@ ChartJS.register(
   Tooltip,
   Legend,
   Zoom,
+  annotationPlugin,
 );
+
+ChartJS.register(annotationPlugin);
 
 const PerformanceChart = (props) => {
     // const [processedData, setProcessedData] = useState([]);
@@ -38,7 +43,7 @@ const PerformanceChart = (props) => {
     // let isWaiting = useRef(false);
 
     const DEFAULT_SIZE = 200;
-    const DEFAULT_MAX = 400-props.period;
+    const DEFAULT_MAX = 400 //-props.period;
     const DEFAULT_LOAD_THRESH = 200;
 
     let needsData = useRef(true);
@@ -54,7 +59,7 @@ const PerformanceChart = (props) => {
 
     // console.log("HERE");
 
-    const labels = rawData.map(item => item.date);
+    const labels = rawData.map(item => item.date.split("T")[0]);
     const percentChanges = rawData.map(item =>item.percentChange);
     const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
 
@@ -73,25 +78,74 @@ const PerformanceChart = (props) => {
 
     // let rawData = useRef([]);
 
-    const prepProcessedData = (min, pctChanges) => {
-        let runningProduct = 1.0;
-        return pctChanges.map((item, index) => {
-            // console.log("runningProduct: " + runningProduct);
-            // console.log("(runningProduct - 1.0) * 100: " + (runningProduct - 1.0) * 100.0);
-            // console.log("rawData[index]: " + percentChanges[index]);
-            if (index < min) {
-                return 0.0;
-            } else if (index == min) {
-                runningProduct = 1.0;
-            }
-            const value = (runningProduct - 1.0) * 100.0;
-            runningProduct = runningProduct * item;
-            return value;
-        });
+    // const prepSemiProcessedData = (min, pctChanges) => {
+    //     let runningProduct = 1.0;
+    //     return pctChanges.map((item, index) => {
+    //         // console.log("runningProduct: " + runningProduct);
+    //         // console.log("(runningProduct - 1.0) * 100: " + (runningProduct - 1.0) * 100.0);
+    //         // console.log("rawData[index]: " + percentChanges[index]);
+    //         if (index < min) {
+    //             return 0.0;
+    //         } else if (index == min) {
+    //             runningProduct = 1.0;
+    //         }
+    //         const returnVal = runningProduct;
+    //         // const value = (runningProduct - 1.0) * 100.0;
+    //         runningProduct = runningProduct * item;
+    //         // return value;
+    //         return returnVal;
+    //     });
+    // }
+
+    // const prepProcessedData = (min, pctChanges) => {
+    //     let runningProduct = 1.0;
+    //     return pctChanges.map((item, index) => {
+    //         // console.log("runningProduct: " + runningProduct);
+    //         // console.log("(runningProduct - 1.0) * 100: " + (runningProduct - 1.0) * 100.0);
+    //         // console.log("rawData[index]: " + percentChanges[index]);
+    //         if (index < min) {
+    //             return 0.0;
+    //         } else if (index == min) {
+    //             runningProduct = 1.0;
+    //         }
+    //         const value = (runningProduct - 1.0) * 100.0;
+    //         runningProduct = runningProduct * item;
+    //         return value;
+    //     });
+    // }
+
+    const prepProcessedData = (min, max, pctChanges, name) => {
+      let runningProduct = 1.0;
+      const returnData = [];
+      const deviationData = [];
+      for (let i = 0;i<pctChanges.length;i++) {
+        if (i < min) {
+          returnData.push(0.0);
+        } else if (i == min) {
+          runningProduct = 1.0;
+          const value = (runningProduct - 1.0) * 100.0;
+          const deviationValue = runningProduct * 100.0;
+          runningProduct = runningProduct * pctChanges[i];
+          returnData.push(value);
+          deviationData.push(deviationValue);
+        } else if (i <= max) {
+          const value = (runningProduct - 1.0) * 100.0;
+          const deviationValue = runningProduct * 100.0;
+          runningProduct = runningProduct * pctChanges[i];
+          returnData.push(value);
+          deviationData.push(deviationValue);
+        }
+      }
+      props.updateDeviationData({gain: deviationData[deviationData.length-1] - deviationData[0], deviation: standardDeviation(deviationData), name: name});
+      // console.log(deviationData[(deviationData.length-1)] - deviationData[0])
+      console.log('gain / deviation for ' + name + ': ' + (deviationData[(deviationData.length-1)] - deviationData[0]) / standardDeviation(deviationData));
+      // console.log(standardDeviation(deviationData));
+      // console.log(deviationData);
+      return returnData;
     }
 
-    const processedData = prepProcessedData(maxRef.current-sizeRef.current, percentChanges);
-    const processedBaselineData = prepProcessedData(maxRef.current-sizeRef.current, baselinePercentChanges);
+    const processedData = prepProcessedData(maxRef.current-sizeRef.current, maxRef.current, percentChanges, 'model');
+    const processedBaselineData = prepProcessedData(maxRef.current-sizeRef.current, maxRef.current, baselinePercentChanges, 'baseline');
 
 
     const chartRef = useRef();
@@ -112,15 +166,20 @@ const PerformanceChart = (props) => {
       if (!isWaiting.current) {
         isWaiting.current = true;
         props.onStartedLoadingPerformance();
-        const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + 0).then(response => {
+        // const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + 0).then(response => {
+        const promise1 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=' + props.period + 
+                                '&numPicks=' + props.numPicks + '&page=' + 0).then(response => {
             return response.json();
         });
-        const promise2 = fetch('http://localhost:8080/performance/' + props.period + '/' + 5000 + '/' + props.type + '/' + 0).then(response => {
+        // const promise2 = fetch('http://localhost:8080/performance/1/5000/c/0').then(response => {
+          const promise2 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=1&numPicks=5000&page=0').then(response => {
           return response.json();
         });
         Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
-          setRawData(responseData1.slice(props.period).reverse());
-          setBaselineRawData(responseData2.slice(props.period).reverse());
+          // setRawData(responseData1.slice(props.period).reverse());
+          // setBaselineRawData(responseData2.slice(props.period).reverse());
+          setRawData(responseData1.reverse());
+          setBaselineRawData(responseData2.reverse());
           setPage(1);
           setError(false);
           // dataSizeRef.current = 10000;
@@ -129,7 +188,7 @@ const PerformanceChart = (props) => {
           isWaiting.current = false;
           maxRef.current = DEFAULT_MAX;
           sizeRef.current = DEFAULT_SIZE;
-          dataSizeRef.current = responseData1.slice(props.period).length;
+          dataSizeRef.current = responseData1.length; //responseData1.slice(props.period).length;
         }).catch(error => {
           setError(true);
           props.onDoneLoadingPerformance();
@@ -183,8 +242,8 @@ const PerformanceChart = (props) => {
           const min = Number(maxRef.current-sizeRef.current)+Number(dataGrowthSize);
           const max = Number(maxRef.current)+Number(dataGrowthSize);
           // console.log("Updating processed data.");
-          chartRef.current.data.datasets[0].data = prepProcessedData(min, percentChanges);
-          chartRef.current.data.datasets[1].data = prepProcessedData(min, baselinePercentChanges);
+          chartRef.current.data.datasets[0].data = prepProcessedData(min, max, percentChanges, 'model');
+          chartRef.current.data.datasets[1].data = prepProcessedData(min, max, baselinePercentChanges, 'baseline');
           chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
           // chartRef.current.stop(); // make sure animations are not running
           // chartRef.current.update('none');
@@ -207,10 +266,15 @@ const PerformanceChart = (props) => {
     const loadMoreData = (chart) => {
         if (!loadingMoreRef.current) {
           loadingMoreRef.current = true;
-        const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + page).then(response => {
-            return response.json();
+        // const promise1 = fetch('http://localhost:8080/performance/' + props.period + '/' + props.numPicks + '/' + props.type + '/' + page).then(response => {
+        const promise1 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=' + props.period + 
+                                '&numPicks=' + props.numPicks + '&page=' + page).then(response => {
+        
+        return response.json();
         });
-        const promise2 = fetch('http://localhost:8080/performance/' + props.period + '/' + 5000 + '/' + props.type + '/' + page).then(response => {
+        // const promise2 = fetch('http://localhost:8080/performance/1/' + 5000 + '/' + props.type + '/' + page).then(response => {
+          const promise2 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=1&numPicks=5000&page=' 
+                                  + page).then(response => {
           return response.json();
       });
         Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
@@ -283,8 +347,9 @@ const PerformanceChart = (props) => {
         const percentChanges = rawData.map(item =>item.percentChange);
         const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
         
-        chart.chart.data.datasets[0].data = prepProcessedData(min, percentChanges);
-        chart.chart.data.datasets[1].data = prepProcessedData(min, baselinePercentChanges);
+        chart.chart.data.datasets[0].data = prepProcessedData(min, max, percentChanges, 'model');
+        chart.chart.data.datasets[1].data = prepProcessedData(min, max, baselinePercentChanges, 'baseline');
+        // chart.chart.plugins.annotation.annotations[0].value = labels.indexOf(props.date) - (maxRef.current - sizeRef.current);
         chart.chart.stop(); // make sure animations are not running
         chart.chart.update('none');
       // }
@@ -327,6 +392,46 @@ const PerformanceChart = (props) => {
       }
     };
 
+    console.log('annotationData: ' + labels.indexOf(props.date) + ', ' + (maxRef.current - sizeRef.current));
+    console.log('labels: ' + labels);
+    console.log('props.date: ' + props.date);
+
+    const annotation = {
+      type: "line",
+      mode: "vertical",
+      scaleID: "x",
+      // value: labels.indexOf(props.date) - (maxRef.current - sizeRef.current),
+      value: labels.indexOf(props.date),
+      borderColor: 'rgb(145, 138, 1)',
+      borderDash: [6, 6],
+      borderWidth: 2,
+      label: {
+        content: "TODAY",
+        enabled: true,
+        position: "top"
+      }
+    };  
+
+    // const annotation2 = {
+    //   type: 'box',
+    //   backgroundColor: 'rgba(145, 138, 1, 0.2)',
+    //   // backgroundColor: 'rgba(147, 64, 108, 0.2)',
+    //   borderWidth: 0,
+    //   xMax: Number(labels.indexOf(props.date)) + Number(props.period),
+    //   xMin: labels.indexOf(props.date),
+    //   label: {
+    //     drawTime: 'afterDraw',
+    //     display: false,
+    //     content: `${props.period} Market Days`,
+    //     position: {
+    //       x: 'center',
+    //       y: 'start'
+    //     }
+    //   }
+    // };
+
+    const annotations = [annotation];
+
     const options = {
         responsive: true,
         animation: {
@@ -341,6 +446,9 @@ const PerformanceChart = (props) => {
             text: props.stockName,
           },
           zoom: zoomOptions,
+          annotation: {
+            annotations: annotations
+          },
           tooltip: {
             callbacks: {
               beforeTitle: function () {
@@ -404,17 +512,28 @@ const PerformanceChart = (props) => {
         type: 'line',
         label: 'Cumulative % Change for top ' + props.numPicks + ' stocks',
         data: processedData,
-        borderColor: 'rgb(24, 26, 131)',
-        backgroundColor: 'rgb(24, 26, 131)',
+        borderColor: 'rgba(64, 66, 147, 0.75)',
+        backgroundColor: 'rgba(64, 66, 147, 0.75)',
         yAxisID: 'y',
         },
         {
           type: 'line',
           label: 'Cumulative % Change for all stocks',
           data: processedBaselineData,
-          borderColor: 'rgb(131, 24, 80)',
-          backgroundColor: 'rgb(131, 24, 80)',
+          borderColor: 'rgba(116, 14, 14, 0.75)',
+          backgroundColor: 'rgba(116, 14, 14, 0.75)',
           yAxisID: 'y',
+          },
+          {
+            type: 'line',
+            label: props.date,
+            data: [],
+            borderColor: 'rgb(115, 84, 37)',
+            backgroundColor: 'rgba(115, 84, 37, 0.2)',
+            borderDash: [10,2],
+            // borderColor: 'rgb(145, 138, 1)',
+            // backgroundColor: 'rgba(145, 138, 1, 0.2)',135, 113, 80
+            yAxisID: 'y',
           },
       ],
 };
@@ -424,4 +543,9 @@ const PerformanceChart = (props) => {
 
 
 
-export default PerformanceChart;
+export default memo(PerformanceChart, (prevProps, nextProps) => {
+  if (prevProps.period === nextProps.period && prevProps.numPicks === nextProps.numPicks && prevProps.date === nextProps.date) {
+      return true; 
+  }
+  return false; 
+});

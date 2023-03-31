@@ -1,14 +1,27 @@
 import { useState } from "react";
 import styles from './PerformancePanel.module.css';
 import PerformanceChart from "./PerformanceChart";
+import PerformanceMetrics from "./PerformanceMetrics";
 
 const PerformancePanel = (props) => {
 
     const [numPicks, setNumPicks] = useState(5);
+    const [modelMetrics, setModelMetrics] = useState({gain: 0, deviation:1});
+    const [baselineMetrics, setBaselineMetrics] = useState({gain: 0, deviation:1});
+    
 
     const numPicksChangeHandler = (event) => {
         setNumPicks(event.target.value);
     }
+
+    const updateDeviationData = (data) => {
+        if (data.name == 'model') {
+            setModelMetrics(data);
+        } else if (data.name == 'baseline') {
+            setBaselineMetrics(data);
+        }
+    };
+
 
     return (
         <div className={`${styles.screentop} ${styles.panel}`}>
@@ -26,10 +39,6 @@ const PerformancePanel = (props) => {
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
                     <option value="10">10</option>
                     <option value="15">15</option>
                     <option value="20">20</option>
@@ -39,11 +48,17 @@ const PerformancePanel = (props) => {
                 </select>
             </field>
             <PerformanceChart period={props.period} 
+                            date={props.date}
                             numPicks={numPicks} 
                             datePickHandler={props.datePickHandler} 
                             type="c"
                             onStartedLoadingPerformance={props.onStartedLoadingPerformance}
-                            onDoneLoadingPerformance={props.onDoneLoadingPerformance}/>
+                            onDoneLoadingPerformance={props.onDoneLoadingPerformance}
+                            updateDeviationData={updateDeviationData}/>
+            <PerformanceMetrics modelMetrics={modelMetrics} 
+                                baselineMetrics={baselineMetrics}
+                                date={props.date}
+                                numPicks={numPicks} />
         </div>
     );
 }

@@ -15,6 +15,7 @@ import {
 import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 
 
 ChartJS.register(
@@ -42,14 +43,69 @@ const StockHistoryComponent = (props) => {
     const [zoomMax, setZoomMax] = useState(250);
     const [needsMoreData, setNeedsMoreData] = useState(false);
     const [needsData, setNeedsData] = useState(true);
+    const [benchmarkData, setBenchmarkData] = useState([]);
+    
+    let benchmarkDate = useRef(props.date);
+    let benchmarkStockName = useRef(props.stockName);
+
 
     // const [rawData, setRawData] = useState([]);
 
-    const labels = data.map(item => item.date);
+    const labels = data.map(item => item.date.split('T')[0]);
     const values = data.map(item => item.closePrice);
     const scores = data.map(item => (item.score-1.0)*1000.0);
     const maxScore = Math.max(...scores);
     const minScore = Math.min(...scores);
+
+    const startIndex = labels.indexOf(props.date);
+    
+    let product = values[startIndex];
+    const outOfContextBenchmarkValues = !benchmarkData ? [] : benchmarkData.slice(0, props.period).map((item, index) => {
+        const returnVal = product;
+        product = product * item.percentChange;
+        return returnVal;
+    });
+    outOfContextBenchmarkValues.push(product);
+    console.log('out of context benchmark values: ' + outOfContextBenchmarkValues);
+    const benchmarkValues = startIndex < 0 ? [] : [...Array(startIndex).fill(null), ...outOfContextBenchmarkValues];
+    console.log("benchmark values length : " + benchmarkValues.length);
+
+    // *********
+    // GRAY ANNOTATIONS
+    // *********
+
+    const grayBoundaries = [];
+    let inGray = false;
+    let inGrayStart = 0;
+    for (let i = 0;i<data.length;i++) {
+        if (!data[i].currentConstituent.data[0] && !inGray) {
+            inGray = true;
+            inGrayStart = i;
+        } else if (!!data[i].currentConstituent.data[0] && inGray) {
+            inGray = false;
+            grayBoundaries.push({left:inGrayStart, right:i});
+        }
+    }
+    if (inGray) {
+        grayBoundaries.push({left:inGrayStart, right:data.length});
+    }
+    const grayAnnotations = grayBoundaries.map(b => {
+        return {
+            type: 'box',
+            backgroundColor: 'rgba(159, 175, 201, 0.2)',
+            borderWidth: 0,
+            xMax: b.right,
+            xMin: b.left,
+            label: {
+              drawTime: 'afterDraw',
+              display: false,
+            }
+          };
+    });
+
+    // ************
+    // END GRAY ANNOTATIONS 
+    // ************
 
     const chartRef = useRef();
     const doubleClickHandler = (event) => {
@@ -69,7 +125,9 @@ const StockHistoryComponent = (props) => {
         // setIsLoading(true);
         if (!isWaiting.current) {
             isWaiting.current = true;
-            fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + 0).then(response => {
+            // fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + 0).then(response => {
+              fetch(' https://6tzw64t9eb.execute-api.us-east-1.amazonaws.com/default/getStockHistory?stockName=' + props.stockName + 
+                      '&period=' + props.period + '&page=' + 0).then(response => {
                 return response.json();
             }).then(responseData => {
                 setPage(1);
@@ -87,6 +145,15 @@ const StockHistoryComponent = (props) => {
         }
     } 
 
+    const loadBenchmarkData = () => {
+        // fetch('http://localhost:8080/performance-date/1/5000/c/' + props.date).then(response => {
+          fetch('https://0w55vqldgh.execute-api.us-east-1.amazonaws.com/default/getPerformanceForDate?period=1&numPicks=5000&date=' + props.date).then(response => {  
+            return response.json();
+        }).then(responseData => {
+            setBenchmarkData([...responseData]);
+        });
+    }
+
     const loadMoreData = (chart, min, max) => {
         if (!needsMoreData) {
             setNeedsMoreData(true);
@@ -96,7 +163,9 @@ const StockHistoryComponent = (props) => {
     useEffect(() => {
         if (needsMoreData && !isWaiting.current) {
             isWaiting.current = true;
-            fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + page).then(response => {
+            // fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + page).then(response => {
+              fetch(' https://6tzw64t9eb.execute-api.us-east-1.amazonaws.com/default/getStockHistory?stockName=' + props.stockName + 
+              '&period=' + props.period + '&page=' + page).then(response => {
                 return response.json();
             }).then(responseData => {
                 setPage(page + 1);
@@ -116,6 +185,14 @@ const StockHistoryComponent = (props) => {
         // if (data.length === 0) {
         if (needsData) {
             loadData();
+        }
+
+        if (props.date !== benchmarkDate.current || 
+              props.stockName !== benchmarkStockName.current || 
+              (benchmarkData.length == 0 && startIndex < labels.length-1)) {
+            benchmarkStockName.current = props.stockName;
+            benchmarkDate.current = props.date;
+            loadBenchmarkData();
         }
 
         // chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
@@ -176,7 +253,7 @@ const StockHistoryComponent = (props) => {
             mode: "vertical",
             scaleID: "x",
             value: props.date,
-            borderColor: 'rgb(147, 64, 108)',
+            borderColor: 'rgb(145, 138, 1)',
             borderDash: [6, 6],
             borderWidth: 2,
             label: {
@@ -188,7 +265,8 @@ const StockHistoryComponent = (props) => {
   
       const annotation2 = {
         type: 'box',
-        backgroundColor: 'rgba(147, 64, 108, 0.2)',
+        backgroundColor: 'rgba(145, 138, 1, 0.2)',
+        // backgroundColor: 'rgba(147, 64, 108, 0.2)',
         borderWidth: 0,
         xMax: Number(labels.indexOf(props.date)) + Number(props.period),
         xMin: labels.indexOf(props.date),
@@ -203,7 +281,7 @@ const StockHistoryComponent = (props) => {
         }
       };
   
-      const annotations = !isLoading ? [annotation, annotation2] : [];
+      const annotations = !isLoading ? [annotation, annotation2, ...grayAnnotations] : [];
   
       const options = {
         // annotation: ,
@@ -283,8 +361,8 @@ const StockHistoryComponent = (props) => {
           type: 'line',
           label: 'Close Price',
           data: values,
-          borderColor: 'rgb(64, 66, 147)',
-          backgroundColor: 'rgb(64, 66, 147)',
+          borderColor: 'rgba(64, 66, 147, 0.75)',
+          backgroundColor: 'rgba(64, 66, 147, 0.75)',
           yAxisID: 'y',
           },
           {
@@ -294,9 +372,35 @@ const StockHistoryComponent = (props) => {
           borderColor: 'rgb(64, 147, 103)',
           backgroundColor: 'rgba(64, 147, 103, 0.5)',
           yAxisID: 'y1',
-          }
+          },
+          {
+            type: 'line',
+            label: `${props.period}-Day Period starting ${props.date}`,
+            data: [],
+            borderColor: 'rgb(115, 84, 37)',
+            backgroundColor: 'rgba(115, 84, 37, 0.2)',
+            borderDash: [10,2],
+            // borderColor: 'rgb(145, 138, 1)',
+            // backgroundColor: 'rgba(145, 138, 1, 0.2)',135, 113, 80
+            yAxisID: 'y',
+          },
         ],
     };
+
+    if (startIndex < labels.length-1) {
+      chartData.datasets.push({
+        type: 'line',
+        label: 'All Stocks Price Movement',
+        data: benchmarkValues,
+        // borderColor: 'rgba(245, 190, 66, 0.85)',
+        borderColor: 'rgba(131, 24, 80, 0.75)',
+        backgroundColor: 'rgba(256,256,256, 0.75)',
+        borderDash: [10,2],
+        // borderColor: 'rgba(131, 24, 80, 0.75)',
+        // backgroundColor: 'rgba(131, 24, 80, 0.75)',209, 151, 42
+        yAxisID: 'y'
+      });
+    }
 
 
     return <Chart ref={chartRef} options={options} data={chartData} onDoubleClick={doubleClickHandler} />;

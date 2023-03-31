@@ -1,0 +1,58 @@
+.table {
+    border-collapse: collapse;
+    /* margin: 25px 0; */
+    margin-top: 10px;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 50px;
+    color: #ddd;
+    /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+}
+
+/* .headertr { */
+.table thead tr {
+    background-color: rgba(51,51,51, 0.85);
+    color: #ddd;
+    text-align: left;
+    border-left: 1px solid white;
+}
+
+.ignore {
+    background-color: white;
+    color: transparent;
+    
+}
+
+.table thead tr th {
+    border: 1px solid white;
+}
+
+.alignright {
+    text-align: right;
+    max-width: 50px;
+}
+
+.td {
+    min-width: 120px;
+    border: 1px solid white;
+}
+
+.omarket {
+    background-color: rgba(64, 66, 147,0.75);
+    color: #fff;
+}
+
+.all {
+    background-color: rgba(116, 14, 14, 0.75);
+    color: #fff;
+}
+
+
+/* .table table th, */
+/* .table table td {
+    padding: 12px 15px;
+} */
+
+/* .table tbody tr {
+    border-bottom: 1px solid #dddddd;
+} */

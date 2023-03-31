@@ -23,6 +23,7 @@ const StockItem = (props) => {
         <tr className={props.selectedStock==props.stockName ? styles.selected : ''} onClick={clickHandler}>
             <td>{props.rank}</td>
             <td>{props.stockName}</td>
+            <td>{toTwoDecimals(props.openPrice)}</td>
             <td>{toTwoDecimals(props.closePrice)}</td>
             <td>{props.score}</td>
             <td>{nextPeriodPercentChangeClose}</td>

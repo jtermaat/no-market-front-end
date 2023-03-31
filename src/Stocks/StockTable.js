@@ -2,8 +2,8 @@ import React from "react";
 
 import StockItem from "./StockItem";
 import SearchBar from "./SearchBar";
-import { useState, useEffect, useRef } from "react";
-import './StockTable.scss';
+import { useState, useEffect, useRef, memo } from "react";
+import styles from './StockTable.module.scss';
 
 const EMPTY_SEARCH_STRING = '0';
 
@@ -19,14 +19,21 @@ const StockTable = (props) => {
 
     const loadData = () => {
         needsData.current = false;
-        fetch('http://localhost:8080/prediction/all/' +  (!!props.date ? props.date : '0') + '/' + 
-                                                                        props.period + '/' + 
-                                                                        searchString.current + '/' +
-                                                                        page.current).then(response => {
+        // fetch('http://localhost:8080/prediction/all/' +  (!!props.date ? props.date : '0') + '/' + 
+        //                                                                 props.period + '/' + 
+        //                                                                 searchString.current + '/' +
+        //                                                                 page.current).then(response => {
+            const url = 'https://9hvq4fznse.execute-api.us-east-1.amazonaws.com/default/getStockList?period=' + props.period + 
+            '&date=' + (!!props.date ? props.date : '0') + 
+            '&searchString=' + searchString.current +
+            '&page=' + page.current;
+            console.log(url);
+            fetch(url).then(response => {
             return response.json();
         }).then(responseData => {
-            if (responseData[0].date !== props.date) {
-                props.datePopulatedHandler(responseData[0].date);
+            const responseDataDate = responseData[0].date.split('T')[0]
+            if (responseDataDate !== props.date) {
+                props.datePopulatedHandler(responseDataDate);
             }
             // setPage(usePage + 1);
             page.current=page.current+1;
@@ -70,11 +77,12 @@ const StockTable = (props) => {
     return (
         <React.Fragment >
         <SearchBar onSearchInputChange={searchInputChangeHandler}/>
-        <table>
+        <table className={styles.table}>
             <thead>
                 <tr>
                     <th rowSpan="2">Rank</th>
                     <th rowSpan="2">Stock</th>
+                    <th rowSpan="2">Open Price</th>
                     <th rowSpan="2">Close Price</th>
                     <th rowSpan="2">Score on {props.date}</th>
                     <th colSpan="2">Next {props.period}-Day % Change</th>
@@ -92,6 +100,7 @@ const StockTable = (props) => {
                         id={item.id}
                         stockName={item.stockName}
                         closePrice={item.closePrice}
+                        openPrice={item.openPrice}
                         nextDayOpenPrice={item.nextDayOpenPrice}
                         score={(item.score-1.0)*1000.0}
                         nextPeriodClosePrice={item.nextPeriodClosePrice}
@@ -105,7 +114,9 @@ const StockTable = (props) => {
     );
 };
 
-export default StockTable;
+export default memo(StockTable, (prevProps, nextProps) => prevProps.period === nextProps.period && 
+                                                        prevProps.date === nextProps.date && 
+                                                        prevProps.selectedStock === nextProps.selectedStock);
 
 
 
