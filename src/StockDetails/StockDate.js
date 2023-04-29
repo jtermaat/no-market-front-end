@@ -19,12 +19,16 @@ const StockDate = (props) => {
     let date = useRef('');
     let needPeriodData = useRef(false);
     let needDetailData = useRef(false);
+
+    let periodError = useRef(false);
+    let detailError = useRef(false);
     // let periodData = useRef(0);
 
     const loadPeriodData = () => {
         // const realDate = !props.date ? null : props.date.getFullYear() + "-" + props.date.getMonth() + "-" + props.date.getDate();
         // setIsLoadingPeriods(true);
         props.onStartedLoadingPeriods();
+        periodError.current = false;
         // fetch('http://localhost:8080/prediction/stock/' + props.stockName + '/' + props.date).then(response => {
         fetch('https://wn5oloaa27.execute-api.us-east-1.amazonaws.com/default/getStockDate?stockName=' + props.stockName + 
                 '&date=' + props.date).then(response => {
@@ -33,12 +37,15 @@ const StockDate = (props) => {
             setPeriodData(responseData.sort((a,b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
             setIsLoadingPeriods(false);
             props.onDoneLoadingPeriods();
+        }).catch(error => {
+            periodError.current = true;
         });
     }
 
     const loadDetailData = () => {
         setIsLoadingDetails(true);
         props.onStartedLoadingDetails();
+        detailError.current = false;
         // fetch('http://localhost:8080/stock-details/' + props.stockName).then(response => {
         fetch(' https://mcgnbffws5.execute-api.us-east-1.amazonaws.com/default/getStockDetails?stockName=' + props.stockName).then(response => {
             if (response.status == 200) {
@@ -60,6 +67,7 @@ const StockDate = (props) => {
                 totalEmployees: 0,
                 description: `Data missing for ${props.stockName}`
             });
+            detailError.current = true;
             props.onDoneLoadingDetails();
         });
     }

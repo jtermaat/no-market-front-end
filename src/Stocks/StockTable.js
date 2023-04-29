@@ -17,8 +17,11 @@ const StockTable = (props) => {
     let currentPeriod = useRef(0);
     let searchString = useRef(EMPTY_SEARCH_STRING);
 
+    let dataError = useRef(false);
+
     const loadData = () => {
         needsData.current = false;
+        dataError.current = false;
         // fetch('http://localhost:8080/prediction/all/' +  (!!props.date ? props.date : '0') + '/' + 
         //                                                                 props.period + '/' + 
         //                                                                 searchString.current + '/' +
@@ -39,6 +42,9 @@ const StockTable = (props) => {
             page.current=page.current+1;
             setData([...responseData]);
             // setIsLoading(false);
+            needsData.current = false;
+        }).catch(error => {
+            dataError.current = true;
             needsData.current = false;
         });
     }

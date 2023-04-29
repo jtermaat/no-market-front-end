@@ -119,11 +119,14 @@ const StockHistoryComponent = (props) => {
     // let dataSizeRef = useRef(400);
 
     let isWaiting = useRef(false);
+    let isStockHistoryError = useRef(false);
+    let isPerformanceDataError = useRef(false);
 
     const loadData = () => {
         // setNeedsData(false);
         // setIsLoading(true);
         if (!isWaiting.current) {
+            isStockHistoryError.current = false;
             isWaiting.current = true;
             // fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + 0).then(response => {
               fetch(' https://6tzw64t9eb.execute-api.us-east-1.amazonaws.com/default/getStockHistory?stockName=' + props.stockName + 
@@ -141,16 +144,25 @@ const StockHistoryComponent = (props) => {
                 sizeRef.current = 250;
                 chartRef.current.zoomScale('x', {min: 250, max: 400}, 'default');
                 // setNeedsMoreData(false);
+            }).catch(error => {
+                setIsLoading(false);
+                setNeedsData(false);
+                isWaiting.current = false;
+                isStockHistoryError.current = true;
+
             });
         }
     } 
 
     const loadBenchmarkData = () => {
         // fetch('http://localhost:8080/performance-date/1/5000/c/' + props.date).then(response => {
+          isPerformanceDataError.current = false;
           fetch('https://0w55vqldgh.execute-api.us-east-1.amazonaws.com/default/getPerformanceForDate?period=1&numPicks=5000&date=' + props.date).then(response => {  
             return response.json();
         }).then(responseData => {
             setBenchmarkData([...responseData]);
+        }).catch(error => {
+          isPerformanceDataError.current = true;
         });
     }
 
@@ -162,6 +174,7 @@ const StockHistoryComponent = (props) => {
 
     useEffect(() => {
         if (needsMoreData && !isWaiting.current) {
+            isStockHistoryError.current = false;
             isWaiting.current = true;
             // fetch('http://localhost:8080/prediction/' + props.stockName + '/' + props.period + '/' + page).then(response => {
               fetch(' https://6tzw64t9eb.execute-api.us-east-1.amazonaws.com/default/getStockHistory?stockName=' + props.stockName + 
@@ -178,6 +191,7 @@ const StockHistoryComponent = (props) => {
                 isWaiting.current = false;
             }).catch(e => {
                 isWaiting.current = false;
+                isStockHistoryError.current = true;
             });
         } 
         chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');

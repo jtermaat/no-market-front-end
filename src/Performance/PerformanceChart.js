@@ -299,6 +299,10 @@ const PerformanceChart = (props) => {
             // chart.chart.zoomScale('x', {min: bounds.current.min, max: bounds.current.max}, 'default');
             // chart.zoomScale('x', {min: -100, max: 0}, 'default');
             loadingMoreRef.current = false;
+        }).catch(error => {
+            setNeedsMoreData(false);
+            loadingMoreRef.current = false;
+            setError(true);
         });
       }
     }
