@@ -93,10 +93,6 @@ const StockTable = (props) => {
                     <th rowSpan="2">Score on {props.date}</th>
                     <th colSpan="2">Next {props.period}-Day % Change</th>
                 </tr>
-                <tr>
-                    <th>Close-to-Close</th>
-                    <th>Open-to-Open</th>
-                </tr>
             </thead>
             <tbody>
                 {data.map((item, index) => (

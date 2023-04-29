@@ -160,6 +160,9 @@ const StockHistoryComponent = (props) => {
           fetch('https://0w55vqldgh.execute-api.us-east-1.amazonaws.com/default/getPerformanceForDate?period=1&numPicks=5000&date=' + props.date).then(response => {  
             return response.json();
         }).then(responseData => {
+            if (responseData.length == 0) {
+              isPerformanceDataError.current = true;
+            }
             setBenchmarkData([...responseData]);
         }).catch(error => {
           isPerformanceDataError.current = true;
