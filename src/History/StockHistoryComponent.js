@@ -203,9 +203,10 @@ const StockHistoryComponent = (props) => {
 
         if (props.date !== benchmarkDate.current || 
               props.stockName !== benchmarkStockName.current || 
-              (benchmarkData.length == 0 && startIndex < labels.length-1)) {
+              (benchmarkData.length == 0 && startIndex < labels.length-1 && !isPerformanceDataError.current)) {
             benchmarkStockName.current = props.stockName;
             benchmarkDate.current = props.date;
+            isPerformanceDataError.current = false;
             loadBenchmarkData();
         }
 
