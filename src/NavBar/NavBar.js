@@ -4,7 +4,9 @@ import styles from './NavBar.module.css';
 const NavBar = (props) => {
     return (
         <div className={`${styles.navbar} ${styles['details-parent']}`}>
+            <img src="./omarketicon.png" alt="icon" className={styles.image} />
                     <div className={`${styles['details-child-40']}`}>
+                        
                         {/* <h3 className={`${styles.banner}`}><b>stocklist.ai</b></h3> */}
                         <h4 className={`${styles.banner}`}>O Market, Where Art Thou?</h4>
                     </div>

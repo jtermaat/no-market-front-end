@@ -10,6 +10,15 @@
     border-bottom: 1px solid #444;
     /* max-width: 2160px; */
   }
+
+.image {
+  display: inline-block;
+  /* height: 40px; */
+  width: 8.4%;
+  margin-top: 12px;
+  padding-left: 3rem;
+  margin-left: 19px;
+}
   
   /* Navbar links */
 .navbar a {
@@ -38,7 +47,7 @@
 .details-child-40 {
   display: inline-block;
   /* float: left; */
-  width: 40%;
+  width: 33%;
   margin-left: 1rem;
   margin-right: 1rem;
   vertical-align: top;
@@ -69,6 +78,5 @@
 
     margin-top: 0px;
     /* padding-left: 1rem; */
-    padding-left: 3rem;
     color: white;
 }
