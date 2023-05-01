@@ -6,6 +6,7 @@ import PeriodScoresChart from './PeriodScoresChart';
 import StockDetails from './StockDetails';
 import Spinner from '../Common/Spinner';
 import styles from './StockDate.module.css';
+import MediaQuery from 'react-responsive';
 
 const StockDate = (props) => {
     // const [stockName, setStockName] = useState('');
@@ -102,23 +103,28 @@ const StockDate = (props) => {
     return (
         <React.Fragment>
             <div>
-            <div className={`${styles.screentop} ${styles['stock-title']}`}> 
-            {/* {!!isLoadingDetails && <Spinner />} */}
-                <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
-            </div> 
-        
-            <div className={`${styles['details-parent']}`}>
-                <div className={`${styles['details-child-left']}`}>
-                    {/* {!!isLoadingDetails && <Spinner />} */}
-                    <StockDetails data={detailData} />
+                <div className={`${styles.screentop} ${styles['stock-title']}`}> 
+                    <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
+                </div> 
+                <div className={`${styles['details-parent']}`}>
+                    <MediaQuery minWidth={1080}>
+                        <div className={`${styles['details-child-left']}`}>
+                            <StockDetails data={detailData} />
+                        </div>
+                        <div className={`${styles['details-child-right']}`}>
+                            <PeriodScoresChart data={periodData}
+                                                period={props.period}
+                                                periodChangeHandler={props.periodChangeHandler} />
+                        </div>  
+                    </MediaQuery>
+                    <MediaQuery maxWidth={1079}>
+                        <div className={`${styles['details-child']}`}>
+                            <PeriodScoresChart data={periodData}
+                                                period={props.period}
+                                                periodChangeHandler={props.periodChangeHandler} />
+                        </div>
+                    </MediaQuery>
                 </div>
-                <div className={`${styles['details-child-right']}`}>
-                    <PeriodScoresChart data={periodData}
-                                       period={props.period}
-                                       periodChangeHandler={props.periodChangeHandler} />
-                    {/* {!!isLoadingPeriods && <Spinner /> } */}
-                </div>  
-            </div>
             </div>
         </React.Fragment>
     );

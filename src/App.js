@@ -159,7 +159,9 @@ const App = () => {
                                                                                 datePickHandler={datePickHandler}
                                                                                 onDoneLoadingHistory={onDoneLoadingHistory}
                                                                                 onStartedLoadingHistory={onStartedLoadingHistory} />}
-            
+            {!selectedStock && screen == SCREEN_DATA && <div className={styles.screentop} >
+                                                            <h3 className={styles.centertext}>Select a stock</h3>
+                                                        </div>}
             {/* {!selectedStock && <PerformancePanel datePickHandler={datePickHandler} 
                                                 period={period} />} */}
             {screen == SCREEN_PERFORMANCE && <PerformancePanel datePickHandler={datePickHandler} 

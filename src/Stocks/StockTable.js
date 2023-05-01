@@ -104,7 +104,7 @@ const StockTable = (props) => {
                         closePrice={item.closePrice}
                         openPrice={item.openPrice}
                         nextDayOpenPrice={item.nextDayOpenPrice}
-                        score={(item.score-1.0)*1000.0}
+                        score={Math.round(((item.score-1.0)*1000.0 + Number.EPSILON) * 100) / 100}
                         nextPeriodClosePrice={item.nextPeriodClosePrice}
                         nextPeriodSubsequentOpenPrice={item.nextPeriodSubsequentOpenPrice}
                         stockSelectedHandler={props.stockSelectedHandler}

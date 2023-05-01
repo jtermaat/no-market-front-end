@@ -19,6 +19,14 @@
   width: 50%;
 }
 
+.details-child {
+  display: inline-block;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  vertical-align: top;
+  width: 100%;
+}
+
 .screentop {
   margin-top: 5rem;
 }
