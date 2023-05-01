@@ -16,6 +16,7 @@ import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { useMediaQuery } from 'react-responsive';
 
 
 ChartJS.register(
@@ -56,6 +57,8 @@ const StockHistoryComponent = (props) => {
     const scores = data.map(item => (item.score-1.0)*1000.0);
     const maxScore = Math.max(...scores);
     const minScore = Math.min(...scores);
+
+    const bigScreen = useMediaQuery ({ query: '(min-width: 800px)'});
 
     const startIndex = labels.indexOf(props.date);
     
@@ -356,12 +359,12 @@ const StockHistoryComponent = (props) => {
               y: {
   
                 type: 'linear',
-                display: true,
+                display: bigScreen,
                 position: 'left',
               },
               y1: {
                 type: 'linear',
-                display: true,
+                display: bigScreen,
                 position: 'right',
                 min: minScore,
                 max: maxScore,

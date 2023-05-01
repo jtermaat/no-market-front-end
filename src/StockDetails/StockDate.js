@@ -103,6 +103,7 @@ const StockDate = (props) => {
     return (
         <React.Fragment>
             <div>
+                <MediaQuery minWidth={850} >
                 <div className={`${styles.screentop} ${styles['stock-title']}`}> 
                     <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
                 </div> 
@@ -125,6 +126,32 @@ const StockDate = (props) => {
                         </div>
                     </MediaQuery>
                 </div>
+                </MediaQuery>
+                <MediaQuery maxWidth={849} >
+                <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}> 
+                    <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                </div> 
+                <div className={`${styles['details-parent-mobile']}`}>
+                    <MediaQuery minWidth={1080}>
+                        <div className={`${styles['details-child-left']}`}>
+                            <StockDetails data={detailData} />
+                        </div>
+                        <div className={`${styles['details-child-right']}`}>
+                            <PeriodScoresChart data={periodData}
+                                                period={props.period}
+                                                periodChangeHandler={props.periodChangeHandler} />
+                        </div>  
+                    </MediaQuery>
+                    <MediaQuery maxWidth={1079}>
+                        <div className={`${styles['details-child']}`}>
+                            <PeriodScoresChart data={periodData}
+                                                period={props.period}
+                                                periodChangeHandler={props.periodChangeHandler} />
+                        </div>
+                    </MediaQuery>
+                </div>
+                </MediaQuery>
+                
             </div>
         </React.Fragment>
     );

@@ -2,6 +2,12 @@
     padding-left: 3rem;
     padding-right: 3rem;
   }
+
+  .details-parent-mobile {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
 .details-child-left {
     display: inline-block;
     padding-left: 1rem;
@@ -34,6 +40,11 @@
 .stock-title {
   padding-left: 4rem;
   padding-right: 4rem;
+}
+
+.stock-title-mobile {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .spinnerbox {
