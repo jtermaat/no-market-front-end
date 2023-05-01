@@ -6,7 +6,8 @@ const NavBar = (props) => {
     return (
         <div className={`${styles.navbar} ${styles['details-parent']}`}>
             <MediaQuery minWidth={1080}>
-            <img src="./omarketicon.png" alt="icon" className={styles.image} />
+                
+                <img src="./omarketicon.png" alt="icon" className={styles.image} />
                     <div className={`${styles['details-child-40']}`}>
                         
                         {/* <h3 className={`${styles.banner}`}><b>stocklist.ai</b></h3> */}
@@ -14,7 +15,9 @@ const NavBar = (props) => {
                     </div>
             </MediaQuery>
             <MediaQuery maxWidth={1079}>
+            <MediaQuery minWidth={390}>
             <img src="./omarketicon.png" alt="icon" className={styles.imagemobile} />
+            </MediaQuery>
                     <div className={`${styles['details-child-80']}`}>
                         
                         {/* <h3 className={`${styles.banner}`}><b>stocklist.ai</b></h3> */}

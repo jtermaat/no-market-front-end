@@ -1,9 +1,12 @@
-import React from "react";
+import React, {Fragment} from "react";
 import styles from './MenuButton.module.css';
+import MediaQuery from 'react-responsive';
 
 const MenuButton = (props) => {
 
     return (
+        <React.Fragment>
+        <MediaQuery minWidth={333} >
         <div className={styles.dropdown}>
             <button className={styles.dropbtn}>
                 <i className={`fa-solid fa-bars fa-2x ${styles.menuicon}`}></i>
@@ -19,6 +22,25 @@ const MenuButton = (props) => {
                     onClick={props.tweetClickHandler}><b>Record-keeping</b></a> */}
             </div>
         </div>
+        </MediaQuery>
+        <MediaQuery maxWidth={332} >
+                <div className={styles.dropdownmobile}>
+                    <button className={styles.dropbtnmobile}>
+                        <i className={`fa-solid fa-bars fa-2x ${styles.menuicon}`}></i>
+                    </button>
+                    <div className={`${styles["dropdown-content"]}`}>
+                        <a style={{textAlign: 'left', color: 'white'}} className={`${styles.menuitem} ${styles['menuitem-blue']}`} href="#" 
+                            onClick={props.dataClickHandler}><b>Data</b></a>
+                        <a style={{textAlign: 'left', color: 'white'}} className={`${styles.menuitem} ${styles['menuitem-green']}`} href="#"
+                            onClick={props.performanceClickHandler}><b>Performance</b></a>
+                        <a style={{textAlign: 'left', color: 'white'}} className={`${styles.menuitem} ${styles['menuitem-yellow']}`} href="#"
+                            onClick={props.aboutClickHandler}><b>Explanation</b></a>
+                        {/* <a style={{textAlign: 'left', color: 'white'}} className={`${styles.menuitem} ${styles['menuitem-red']}`} href="#"
+                            onClick={props.tweetClickHandler}><b>Record-keeping</b></a> */}
+                    </div>
+                </div>
+                </MediaQuery>
+            </React.Fragment>
     );
 
 
