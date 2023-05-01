@@ -4,6 +4,7 @@ import StockItem from "./StockItem";
 import SearchBar from "./SearchBar";
 import { useState, useEffect, useRef, memo } from "react";
 import styles from './StockTable.module.scss';
+import MediaQuery from "react-responsive";
 
 const EMPTY_SEARCH_STRING = '0';
 
@@ -83,6 +84,7 @@ const StockTable = (props) => {
     return (
         <React.Fragment >
         <SearchBar onSearchInputChange={searchInputChangeHandler}/>
+        <MediaQuery minWidth={500} >
         <table className={styles.table}>
             <thead>
                 <tr>
@@ -112,6 +114,38 @@ const StockTable = (props) => {
                     />))}
             </tbody>
         </table>
+        </MediaQuery>
+        <MediaQuery maxWidth={499} >
+        <table className={styles.tablemobile}>
+            <thead>
+                <tr>
+                    <th rowSpan="2">Rank</th>
+                    <th rowSpan="2">Stock</th>
+                    <th rowSpan="2">Open Price</th>
+                    <th rowSpan="2">Close Price</th>
+                    <th rowSpan="2">Score on {props.date}</th>
+                    <th colSpan="2">Next {props.period}-Day % Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                {data.map((item, index) => (
+                    <StockItem
+                        rank={index+1}
+                        key={item.id}
+                        id={item.id}
+                        stockName={item.stockName}
+                        closePrice={item.closePrice}
+                        openPrice={item.openPrice}
+                        nextDayOpenPrice={item.nextDayOpenPrice}
+                        score={Math.round(((item.score-1.0)*1000.0 + Number.EPSILON) * 100) / 100}
+                        nextPeriodClosePrice={item.nextPeriodClosePrice}
+                        nextPeriodSubsequentOpenPrice={item.nextPeriodSubsequentOpenPrice}
+                        stockSelectedHandler={props.stockSelectedHandler}
+                        selectedStock={props.selectedStock}
+                    />))}
+            </tbody>
+        </table>
+        </MediaQuery>
         </React.Fragment>
     );
 };
