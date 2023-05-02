@@ -15,7 +15,7 @@ const NavBar = (props) => {
                     </div>
             </MediaQuery>
             <MediaQuery maxWidth={1079}>
-            <MediaQuery minWidth={390}>
+            <MediaQuery minWidth={340}>
             <img src="./omarketicon.png" alt="icon" className={styles.imagemobile} />
             </MediaQuery>
                     <div className={`${styles['details-child-80']}`}>
