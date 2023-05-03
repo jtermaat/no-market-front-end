@@ -28,11 +28,15 @@ const PeriodScoresChart = (props) => {
 
     const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
     const under500 = useMediaQuery ({ query: '(max-width: 500px)'});
+    const under420 = useMediaQuery ({ query: '(max-width: 420px)'});
     let chartFontSize = 12;
     if (under700) {
       chartFontSize = 10;
       if (under500) {
         chartFontSize = 7;
+        if (under420) {
+          chartFontSize = 5;
+        }
       }
     }
 

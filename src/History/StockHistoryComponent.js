@@ -61,11 +61,18 @@ const StockHistoryComponent = (props) => {
     const bigScreen = useMediaQuery ({ query: '(min-width: 800px)'});
     const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
     const under500 = useMediaQuery ({ query: '(max-width: 500px)'});
+    const under420 = useMediaQuery ({ query: '(max-width: 420px)'});
+    let chartHeightString = "600px";
     let chartFontSize = 12;
     if (under700) {
+      chartHeightString = "400px";
       chartFontSize = 10;
       if (under500) {
+        chartHeightString = "250px";
         chartFontSize = 7;
+        if (under420) {
+          chartFontSize = 5;
+        }
       }
     }
 
@@ -315,6 +322,7 @@ const StockHistoryComponent = (props) => {
   
       const options = {
         // annotation: ,
+          // maintainAspectRatio: !under700,
           responsive: true,
           animation: {
             duration: 0
@@ -376,7 +384,7 @@ const StockHistoryComponent = (props) => {
               y: {
   
                 type: 'linear',
-                display: bigScreen,
+                // display: bigScreen,
                 position: 'left',
                 ticks: {
                   font: {
@@ -386,7 +394,7 @@ const StockHistoryComponent = (props) => {
               },
               y1: {
                 type: 'linear',
-                display: bigScreen,
+                // display: bigScreen,
                 position: 'right',
                 min: minScore,
                 max: maxScore,

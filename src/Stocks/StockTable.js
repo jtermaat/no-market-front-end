@@ -93,7 +93,7 @@ const StockTable = (props) => {
                     <th rowSpan="2">Open Price</th>
                     <th rowSpan="2">Close Price</th>
                     <th rowSpan="2">Score on {props.date}</th>
-                    <th colSpan="2">Next {props.period}-Day % Change</th>
+                    {/* <th colSpan="2">Next {props.period}-Day % Change</th> */}
                 </tr>
             </thead>
             <tbody>
@@ -124,7 +124,7 @@ const StockTable = (props) => {
                     <th rowSpan="2">Open Price</th>
                     <th rowSpan="2">Close Price</th>
                     <th rowSpan="2">Score on {props.date}</th>
-                    <th colSpan="2">Next {props.period}-Day % Change</th>
+                    {/* <th colSpan="2">Next {props.period}-Day % Change</th> */}
                 </tr>
             </thead>
             <tbody>

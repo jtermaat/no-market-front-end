@@ -26,7 +26,7 @@ const StockItem = (props) => {
             <td>{toTwoDecimals(props.openPrice)}</td>
             <td>{toTwoDecimals(props.closePrice)}</td>
             <td>{props.score}</td>
-            <td>{nextPeriodPercentChangeClose}</td>
+            {/* <td>{nextPeriodPercentChangeClose}</td> */}
         </tr>
     );
 }
