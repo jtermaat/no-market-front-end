@@ -454,6 +454,7 @@ const StockHistoryComponent = (props) => {
         borderColor: 'rgba(131, 24, 80, 0.75)',
         backgroundColor: 'rgba(256,256,256, 0.75)',
         borderDash: [10,2],
+        borderWidth: under700 ? 1 : 2,
         // borderColor: 'rgba(131, 24, 80, 0.75)',
         // backgroundColor: 'rgba(131, 24, 80, 0.75)',209, 151, 42
         yAxisID: 'y'
