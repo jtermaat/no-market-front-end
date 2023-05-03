@@ -9,6 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Bar, getElementAtEvent } from 'react-chartjs-2';
+import { useMediaQuery } from 'react-responsive';
 
 ChartJS.register(
   CategoryScale,
@@ -24,6 +25,16 @@ const PeriodScoresChart = (props) => {
     const scoreData = props.data.map(a => (a.score-1.0) * 1000.0);
     const scaleMax = Math.max(25, ...scoreData);
     const scaleMin = Math.min(...scoreData) < 0 ? Math.min(-5, ...scoreData) : 0;
+
+    const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
+    const under500 = useMediaQuery ({ query: '(max-width: 500px)'});
+    let chartFontSize = 12;
+    if (under700) {
+      chartFontSize = 10;
+      if (under500) {
+        chartFontSize = 7;
+      }
+    }
 
     const chartRef = useRef();
     const clickHandler = (event) => {
@@ -44,7 +55,10 @@ const PeriodScoresChart = (props) => {
           },
           title: {
             display: true,
-            text: 'All Period Scores'
+            text: 'All Period Scores',
+            font: {
+              size: chartFontSize
+            }
           },
         },
         scales: {
@@ -53,10 +67,20 @@ const PeriodScoresChart = (props) => {
               display: true,
               min: scaleMin,
               max: scaleMax,
+              ticks: {
+                font: {
+                  size: chartFontSize
+                }
+              }
             },
             x: {
               display: true,
               label: '(Days)',
+              ticks: {
+                font: {
+                  size: chartFontSize
+                }
+              }
             }
           }
       };

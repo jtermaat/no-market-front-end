@@ -59,6 +59,15 @@ const StockHistoryComponent = (props) => {
     const minScore = Math.min(...scores);
 
     const bigScreen = useMediaQuery ({ query: '(min-width: 800px)'});
+    const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
+    const under500 = useMediaQuery ({ query: '(max-width: 500px)'});
+    let chartFontSize = 12;
+    if (under700) {
+      chartFontSize = 10;
+      if (under500) {
+        chartFontSize = 7;
+      }
+    }
 
     const startIndex = labels.indexOf(props.date);
     
@@ -313,6 +322,11 @@ const StockHistoryComponent = (props) => {
           plugins: {
             legend: {
               position: 'top',
+              labels: {
+                font: {
+                  size: chartFontSize
+                }
+              }
             },
             title: {
               display: false,
@@ -353,7 +367,10 @@ const StockHistoryComponent = (props) => {
                 ticks: {
                   autoSkip: true,
                   autoSkipPadding: 100,
-                  maxRotation: 0
+                  maxRotation: 0,
+                  font: {
+                    size: chartFontSize
+                  }
                 },
               },
               y: {
@@ -361,6 +378,11 @@ const StockHistoryComponent = (props) => {
                 type: 'linear',
                 display: bigScreen,
                 position: 'left',
+                ticks: {
+                  font: {
+                      size: chartFontSize
+                  }
+                }
               },
               y1: {
                 type: 'linear',
@@ -371,6 +393,11 @@ const StockHistoryComponent = (props) => {
                 grid: {
                   drawOnChartArea: false,
                 },
+                ticks: {
+                  font: {
+                      size: chartFontSize
+                  }
+                }
               },
             },
         };
@@ -384,6 +411,7 @@ const StockHistoryComponent = (props) => {
           data: values,
           borderColor: 'rgba(64, 66, 147, 0.75)',
           backgroundColor: 'rgba(64, 66, 147, 0.75)',
+          borderWidth: under700 ? 1 : 2,
           yAxisID: 'y',
           },
           {
@@ -401,6 +429,7 @@ const StockHistoryComponent = (props) => {
             borderColor: 'rgb(115, 84, 37)',
             backgroundColor: 'rgba(115, 84, 37, 0.2)',
             borderDash: [10,2],
+            borderWidth: under700 ? 1 : 2,
             // borderColor: 'rgb(145, 138, 1)',
             // backgroundColor: 'rgba(145, 138, 1, 0.2)',135, 113, 80
             yAxisID: 'y',
