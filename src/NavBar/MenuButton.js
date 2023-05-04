@@ -41,8 +41,8 @@ const MenuButton = (props) => {
         </div>
         </MediaQuery>
         <MediaQuery maxWidth={399} >
-                <div className={styles.dropdownsmall}>
-                    <button className={styles.dropbtnsmall}>
+                <div className={styles.dropdownmedium}>
+                    <button className={styles.dropbtnmedium}>
                         <i className={`fa-solid fa-bars ${styles.menuicon}`}></i>
                     </button>
                     <div className={`${styles["dropdown-content"]}`}>
