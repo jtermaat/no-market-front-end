@@ -485,7 +485,7 @@ const PerformanceChart = (props) => {
         },
         elements: {
           point: {
-            radius: under450 ? 1.0 : 2.0,
+            radius: under450 ? 0.7 : under550 ? 1.0 : 2.0,
           },
           line: {
             tension: 0.01,

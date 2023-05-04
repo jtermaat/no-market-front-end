@@ -47,22 +47,22 @@
 
 .largetext {
     font-size: 16px;
-    margin-right: 1rem;
+    /* margin-right: 1rem; */
 }
 
 .mediumtext {
     font-size: 13px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 .smalltext {
     font-size: 11px;
-    margin-right: 5px;
+    /* margin-right: 5px; */
 }
 
 .tinytext {
     font-size: 9px;
-    margin-right: 2px;
+    /* margin-right: 2px; */
 }
 
 * {box-sizing:border-box;} /* global + reset */
