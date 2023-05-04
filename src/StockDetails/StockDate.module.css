@@ -37,6 +37,14 @@
   margin-top: 5rem;
 }
 
+.screentopmedium {
+  margin-top: 3rem;
+}
+
+.screentopsmall {
+  margin-top: 40px;
+}
+
 .stock-title {
   padding-left: 4rem;
   padding-right: 4rem;

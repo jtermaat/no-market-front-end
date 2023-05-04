@@ -1,9 +1,15 @@
 import MenuButton from './MenuButton';
 import styles from './NavBar.module.css';
 import MediaQuery from 'react-responsive';
+import React from 'react';
 
 const NavBar = (props) => {
+
+
+
     return (
+        <React.Fragment>
+        <MediaQuery minWidth={500}>
         <div className={`${styles.navbar} ${styles['details-parent']}`}>
             <MediaQuery minWidth={1080}>
                 
@@ -50,6 +56,42 @@ const NavBar = (props) => {
                                 aboutClickHandler={props.aboutClickHandler} />
 
                 </div>
+                </MediaQuery>
+        <MediaQuery minWidth={400} maxWidth={499}>
+        <div className={`${styles.navbarmedium} ${styles['details-parent']}`}>
+            <MediaQuery minWidth={340}>
+            <img src="./omarketicon.png" alt="icon" className={styles.imagemedium} />
+            </MediaQuery>
+                    <div className={`${styles['details-child-80']}`}>
+                        
+                        {/* <h3 className={`${styles.banner}`}><b>stocklist.ai</b></h3> */}
+                        <h5 className={`${styles.banner}`}>O Market, Where Art Thou?</h5>
+                    </div>
+                    {/* <i class="fa-solid fa-user"></i> */}
+                    <MenuButton dataClickHandler={props.dataClickHandler}
+                                performanceClickHandler={props.performanceClickHandler}
+                                aboutClickHandler={props.aboutClickHandler} />
+
+                </div>
+                </MediaQuery>
+        <MediaQuery maxWidth={399}>
+        <div className={`${styles.navbarsmall} ${styles['details-parent']}`}>
+            <MediaQuery minWidth={340}>
+            <img src="./omarketicon.png" alt="icon" className={styles.imagesmall} />
+            </MediaQuery>
+                    <div className={`${styles['details-child-80']}`}>
+                        
+                        {/* <h3 className={`${styles.banner}`}><b>stocklist.ai</b></h3> */}
+                        <h6 className={`${styles.bannermobile}`}>O Market, Where Art Thou?</h6>
+                    </div>
+                    {/* <i class="fa-solid fa-user"></i> */}
+                    <MenuButton dataClickHandler={props.dataClickHandler}
+                                performanceClickHandler={props.performanceClickHandler}
+                                aboutClickHandler={props.aboutClickHandler} />
+
+                </div>
+                </MediaQuery>
+                </React.Fragment>
     );
 };
 

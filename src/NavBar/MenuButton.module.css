@@ -93,7 +93,29 @@ a.menuitem {
     /* float: left; */
   }
 
-  .dropbtnmobile {
+  .dropbtnmedium {
+    background-color: black;
+    /* color: white; */
+    /* padding: 16px; */
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    /* margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px; */
+    text-align: left;
+    padding-left: 0px;
+    padding-right: 1px;
+    margin-left: 0px;
+    margin-right: 8px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+    padding-bottom: 5px;
+    padding-top: 8px;
+    /* float: left; */
+  }
+
+  .dropbtnsmall {
     background-color: black;
     /* color: white; */
     /* padding: 16px; */
@@ -106,9 +128,14 @@ a.menuitem {
     text-align: left;
     margin-bottom: 0px;
     padding-left: 0px;
-    padding-right: 0px;
+    padding-right: 1px;
     margin-left: 0px;
-    margin-right: 0px;
+    margin-right: 1px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+
+    padding-top: 2px;
+    padding-bottom: 2px;
     /* float: left; */
   }
   
@@ -121,12 +148,20 @@ a.menuitem {
     margin-right: 15px;
   }
 
-  .dropdownmobile {
+  .dropdownmedium {
     position: relative;
     display: inline-block;
     overflow: visible;
     float: right;
-    margin-right: 0px;
+    margin-right: 2px;
+  }
+
+  .dropdownsmall {
+    position: relative;
+    display: inline-block;
+    overflow: visible;
+    float: right;
+    margin-right: 2px;
   }
   
   /* Dropdown Content (Hidden by Default) */
@@ -155,7 +190,7 @@ a.menuitem {
 }
   
   /* Show the dropdown menu on hover */
-  .dropdown:hover .dropdown-content {
+  .dropdown:hover  .dropdown-content {
     display: block;
   }
   
@@ -165,6 +200,30 @@ a.menuitem {
     background-color: #000000;
     border-color: black;
   }
+
+  .dropdownmedium:hover  .dropdown-content {
+    display: block;
+  }
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdownmedium:hover .dropbtnmedium {
+    color: gray;
+    background-color: #000000;
+    border-color: black;
+  }
+
+
+  .dropdownsmall:hover  .dropdown-content {
+    display: block;
+  }
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdownsmall:hover .dropbtnsmall {
+    color: gray;
+    background-color: #000000;
+    border-color: black;
+  }
+  
 
   .menuicon {
     /* vertical-align: center; */

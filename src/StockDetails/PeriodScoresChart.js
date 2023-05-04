@@ -27,15 +27,15 @@ const PeriodScoresChart = (props) => {
     const scaleMin = Math.min(...scoreData) < 0 ? Math.min(-5, ...scoreData) : 0;
 
     const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
-    const under500 = useMediaQuery ({ query: '(max-width: 500px)'});
-    const under420 = useMediaQuery ({ query: '(max-width: 420px)'});
+    const under500 = useMediaQuery ({ query: '(max-width: 575px)'});
+    const under420 = useMediaQuery ({ query: '(max-width: 440px)'});
     let chartFontSize = 12;
     if (under700) {
       chartFontSize = 10;
       if (under500) {
-        chartFontSize = 7;
+        chartFontSize = 8;
         if (under420) {
-          chartFontSize = 5;
+          chartFontSize = 6;
         }
       }
     }

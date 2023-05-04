@@ -60,8 +60,8 @@ const StockHistoryComponent = (props) => {
 
     const bigScreen = useMediaQuery ({ query: '(min-width: 800px)'});
     const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
-    const under500 = useMediaQuery ({ query: '(max-width: 500px)'});
-    const under420 = useMediaQuery ({ query: '(max-width: 420px)'});
+    const under500 = useMediaQuery ({ query: '(max-width: 575px)'});
+    const under420 = useMediaQuery ({ query: '(max-width: 440px)'});
     let chartHeightString = "600px";
     let chartFontSize = 12;
     if (under700) {
@@ -69,9 +69,9 @@ const StockHistoryComponent = (props) => {
       chartFontSize = 10;
       if (under500) {
         chartHeightString = "250px";
-        chartFontSize = 7;
+        chartFontSize = 8;
         if (under420) {
-          chartFontSize = 5;
+          chartFontSize = 6;
         }
       }
     }

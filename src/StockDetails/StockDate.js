@@ -128,9 +128,22 @@ const StockDate = (props) => {
                 </div>
                 </MediaQuery>
                 <MediaQuery maxWidth={849} >
-                <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}> 
-                    <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
-                </div> 
+                    <MediaQuery minWidth={500}>
+                        <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}> 
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                        </div> 
+                    </MediaQuery>
+                    <MediaQuery minWidth={400} maxWidth={499}>
+                        <div className={`${styles.screentopmedium} ${styles['stock-title-mobile']}`}> 
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                        </div> 
+                    </MediaQuery>
+                    <MediaQuery maxWidth={399}>
+                        <div className={`${styles.screentopsmall} ${styles['stock-title-mobile']}`}> 
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                        </div> 
+                    </MediaQuery>
+                
                 <div className={`${styles['details-parent-mobile']}`}>
                     <MediaQuery minWidth={1080}>
                         <div className={`${styles['details-child-left']}`}>
