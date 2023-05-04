@@ -6,7 +6,7 @@ const MenuButton = (props) => {
 
     return (
         <React.Fragment>
-        <MediaQuery minWidth={500} >
+        <MediaQuery minWidth={600} >
         <div className={styles.dropdown}>
             <button className={styles.dropbtn}>
                 <i className={`fa-solid fa-bars fa-2x ${styles.menuicon}`}></i>
@@ -23,7 +23,7 @@ const MenuButton = (props) => {
             </div>
         </div>
         </MediaQuery>
-        <MediaQuery minWidth={400} maxWidth={499} >
+        <MediaQuery minWidth={400} maxWidth={599} >
         <div className={styles.dropdownmedium}>
             <button className={styles.dropbtnmedium}>
                 <i className={`fa-solid fa-bars ${styles.menuicon}`}></i>

@@ -1,12 +1,55 @@
-.table {
-    border-collapse: collapse;
-    /* margin: 25px 0; */
-    margin-top: 10px;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 50px;
-    color: #ddd;
-    /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+@media (min-width: 600px) {
+    .table {
+        border-collapse: collapse;
+        /* margin: 25px 0; */
+        margin-top: 10px;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 50px;
+        color: #ddd;
+        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+    }
+
+    .td {
+        min-width: 120px;
+        border: 1px solid white;
+    }
+}
+
+@media (max-width: 599px) and (min-width: 400px) {
+    .table {
+        border-collapse: collapse;
+        /* margin: 25px 0; */
+        margin-top: 8px;
+        font-size: 0.7em;
+        font-family: sans-serif;
+        min-width: 20px;
+        color: #ddd;
+        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+    }
+
+    .td {
+        min-width: 70px;
+        border: 1px solid white;
+    }
+}
+
+@media (max-width: 499px) {
+    .table {
+        border-collapse: collapse;
+        /* margin: 25px 0; */
+        margin-top: 5px;
+        font-size: 0.5em;
+        font-family: sans-serif;
+        min-width: 10px;
+        color: #ddd;
+        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+    }
+
+    .td {
+        min-width: 50px;
+        border: 1px solid white;
+    }
 }
 
 /* .headertr { */
@@ -30,11 +73,6 @@
 .alignright {
     text-align: right;
     max-width: 50px;
-}
-
-.td {
-    min-width: 120px;
-    border: 1px solid white;
 }
 
 .omarket {

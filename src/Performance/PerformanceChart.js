@@ -14,6 +14,7 @@ import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import Zoom from 'chartjs-plugin-zoom';
 import standardDeviation from './StandardDeviation';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { useMediaQuery } from 'react-responsive';
 
 
 ChartJS.register(
@@ -32,6 +33,22 @@ ChartJS.register(
 ChartJS.register(annotationPlugin);
 
 const PerformanceChart = (props) => {
+
+  const under700 = useMediaQuery ({ query: '(max-width: 700px)'});
+  const under550 = useMediaQuery ({ query: '(max-width: 550px)'});
+  const under450 = useMediaQuery ({ query: '(max-width: 450px)'});
+
+  let chartFontSize = 14;
+  if (under700) {
+    chartFontSize = 12;
+  }
+  if (under550) {
+    chartFontSize = 10;
+  }
+  if (under450) {
+    chartFontSize = 8;
+  }
+
     // const [processedData, setProcessedData] = useState([]);
     const [rawData, setRawData] = useState([]);
     const [page, setPage] = useState(0);
@@ -444,6 +461,11 @@ const PerformanceChart = (props) => {
         plugins: {
           legend: {
             position: 'top',
+            labels: {
+              font: {
+                size: chartFontSize
+              }
+            }
           },
           title: {
             display: false,
@@ -463,7 +485,7 @@ const PerformanceChart = (props) => {
         },
         elements: {
           point: {
-            radius: 2.0,
+            radius: under450 ? 1.0 : 2.0,
           },
           line: {
             tension: 0.01,
@@ -483,18 +505,31 @@ const PerformanceChart = (props) => {
               ticks: {
                 autoSkip: true,
                 autoSkipPadding: 100,
-                maxRotation: 0
+                maxRotation: 0,
+                font: {
+                  size: chartFontSize
+                }
               },
             },
             y: {
               type: 'linear',
               display: true,
               position: 'left',
+              ticks: {
+                font: {
+                    size: chartFontSize
+                }
+              }
             },
             y1: {
               type: 'linear',
               display: false,
               position: 'right',
+              ticks: {
+                font: {
+                    size: chartFontSize
+                }
+              }
             },
             // y1: {
             //   type: 'linear',
@@ -517,6 +552,7 @@ const PerformanceChart = (props) => {
         label: 'Cumulative % Change for top ' + props.numPicks + ' stocks',
         data: processedData,
         borderColor: 'rgba(64, 66, 147, 0.75)',
+        borderWidth: under700 ? 1 : 2,
         backgroundColor: 'rgba(64, 66, 147, 0.75)',
         yAxisID: 'y',
         },
@@ -525,6 +561,7 @@ const PerformanceChart = (props) => {
           label: 'Cumulative % Change for all stocks',
           data: processedBaselineData,
           borderColor: 'rgba(116, 14, 14, 0.75)',
+          borderWidth: under700 ? 1 : 2,
           backgroundColor: 'rgba(116, 14, 14, 0.75)',
           yAxisID: 'y',
           },
@@ -533,6 +570,7 @@ const PerformanceChart = (props) => {
             label: props.date,
             data: [],
             borderColor: 'rgb(115, 84, 37)',
+            borderWidth: under700 ? 1 : 2,
             backgroundColor: 'rgba(115, 84, 37, 0.2)',
             borderDash: [10,2],
             // borderColor: 'rgb(145, 138, 1)',

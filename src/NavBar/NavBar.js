@@ -9,7 +9,7 @@ const NavBar = (props) => {
 
     return (
         <React.Fragment>
-        <MediaQuery minWidth={500}>
+        <MediaQuery minWidth={600}>
         <div className={`${styles.navbar} ${styles['details-parent']}`}>
             <MediaQuery minWidth={1080}>
                 
@@ -57,7 +57,7 @@ const NavBar = (props) => {
 
                 </div>
                 </MediaQuery>
-        <MediaQuery minWidth={400} maxWidth={499}>
+        <MediaQuery minWidth={400} maxWidth={599}>
         <div className={`${styles.navbarmedium} ${styles['details-parent']}`}>
             <MediaQuery minWidth={340}>
             <img src="./omarketicon.png" alt="icon" className={styles.imagemedium} />
