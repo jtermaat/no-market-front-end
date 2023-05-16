@@ -10,10 +10,6 @@ const StockItem = (props) => {
     if (!!props.nextPeriodClosePrice) {
         nextPeriodPercentChangeClose = toTwoDecimals((((props.nextPeriodClosePrice - props.closePrice) / props.closePrice)*100.0)) + '%';
     }
-    // let nextPeriodPercentChangeOpen = '-';
-    // if (!!props.nextPeriodSubsequentOpenPrice) {
-    //     nextPeriodPercentChangeOpen = toTwoDecimals((((props.nextPeriodSubsequentOpenPrice - props.nextDayOpenPrice) / props.nextDayOpenPrice) * 100.0)) + '%';
-    // }
 
     const clickHandler = (event) => {
         props.stockSelectedHandler(props.stockName);
@@ -26,7 +22,7 @@ const StockItem = (props) => {
             <td>{toTwoDecimals(props.openPrice)}</td>
             <td>{toTwoDecimals(props.closePrice)}</td>
             <td>{props.score}</td>
-            {/* <td>{nextPeriodPercentChangeClose}</td> */}
+            <td>{nextPeriodPercentChangeClose}</td>
         </tr>
     );
 }

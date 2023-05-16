@@ -6,25 +6,12 @@ import PerformancePanel from './Performance/PerformancePanel';
 import NavBar from './NavBar/NavBar';
 import Spinner from './Common/Spinner';
 import { useState, useRef } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-// import '../node_modules/react-datepicker/src/stylesheets/datepicker.scss'
 import styles from './App.module.css';
 import Explanation from './Explanation/Explanation';
-
-// import { Tweet } from 'react-twitter-widgets'
-
-// const timeSwitch = (date) => {
-//     return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()+1}`;
-//     // return new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-// }
 
 const SCREEN_DATA = 'data';
 const SCREEN_PERFORMANCE = 'performance';
 const SCREEN_ABOUT = 'about'; 
-
-// const router = createBrowserRouter([
-//     { path: '/', element: <DataPage /> }, 
-// ]);
 
 const App = () => {
     const [selectedStock, setSelectedStock] = useState('');
@@ -162,8 +149,7 @@ const App = () => {
             {!selectedStock && screen == SCREEN_DATA && <div className={styles.screentop} >
                                                             <h3 className={styles.centertext}>Select a stock</h3>
                                                         </div>}
-            {/* {!selectedStock && <PerformancePanel datePickHandler={datePickHandler} 
-                                                period={period} />} */}
+
             {screen == SCREEN_PERFORMANCE && <PerformancePanel datePickHandler={datePickHandler} 
                                                 period={period} 
                                                 date={selectedDate}
@@ -171,13 +157,6 @@ const App = () => {
                                                 onDoneLoadingPerformance={onDoneLoadingPerformance}/>}
 
             {screen == SCREEN_ABOUT && <Explanation/>}
-            {/* {!selectedStock && !!selectedDate && <div className={`${styles.screentop}`}> */}
-                {/* <TweetWrapper  date={selectedDate} /> */}
-            {/* </div>} */}
-            {/* <div className={styles.panel} >
-            {!selectedStock && <h2 className={`${styles.centertext}`}>Select a stock for details</h2>}
-            </div> */}
-            {/* {screen === SCREEN_DATA && <div className={styles.screentop} /> } */}
 
             {(screen == SCREEN_PERFORMANCE || screen == SCREEN_DATA) && <StockTable className={screen === SCREEN_DATA ? styles.screentop : ''}
                         date={selectedDate} 
