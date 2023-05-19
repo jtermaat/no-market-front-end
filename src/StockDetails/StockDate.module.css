@@ -3,6 +3,11 @@
     padding-right: 3rem;
   }
 
+  .details-parent-1 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .details-parent-mobile {
     padding-left: 0rem;
     padding-right: 0rem;
@@ -30,6 +35,18 @@
   padding-left: 1rem;
   padding-right: 1rem;
   vertical-align: top;
+  width: 100%;
+}
+
+.details-mobile {
+  font-size: 8pt;
+}
+
+.details-tiny {
+  font-size: 6pt;
+}
+
+.details-full {
   width: 100%;
 }
 

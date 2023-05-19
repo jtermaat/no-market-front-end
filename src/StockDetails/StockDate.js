@@ -119,6 +119,9 @@ const StockDate = (props) => {
                         </div>  
                     </MediaQuery>
                     <MediaQuery maxWidth={1079}>
+                    <div className={`${styles['details-parent-1']} ${styles['details-full']}`}>
+                            <StockDetails data={detailData} />
+                        </div>
                         <div className={`${styles['details-child']}`}>
                             <PeriodScoresChart data={periodData}
                                                 period={props.period}
@@ -130,17 +133,18 @@ const StockDate = (props) => {
                 <MediaQuery maxWidth={849} >
                     <MediaQuery minWidth={500}>
                         <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}> 
-                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toLocaleDateString()}</h3>
                         </div> 
+                        
                     </MediaQuery>
                     <MediaQuery minWidth={400} maxWidth={499}>
                         <div className={`${styles.screentopmedium} ${styles['stock-title-mobile']}`}> 
-                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toLocaleDateString()}</h3>
                         </div> 
                     </MediaQuery>
                     <MediaQuery maxWidth={399}>
                         <div className={`${styles.screentopsmall} ${styles['stock-title-mobile']}`}> 
-                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h3>
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toLocaleDateString()}</h3>
                         </div> 
                     </MediaQuery>
                 
@@ -156,7 +160,17 @@ const StockDate = (props) => {
                         </div>  
                     </MediaQuery>
                     <MediaQuery maxWidth={1079}>
-                        <div className={`${styles['details-child']}`}>
+                        <MediaQuery minWidth={500}>
+                        <div className={`${styles['details-parent-1']} ${styles['details-mobile']} ${styles['details-full']}`}>
+                            <StockDetails data={detailData} />
+                        </div>
+                        </MediaQuery>
+                        <MediaQuery maxWidth={499}>
+                        <div className={`${styles['details-parent-1']} ${styles['details-tiny']} ${styles['details-full']}`}>
+                            <StockDetails data={detailData} />
+                        </div>
+                        </MediaQuery>
+                        <div className={`${styles['details-parent-mobile']} ${styles['details-full']}`}>
                             <PeriodScoresChart data={periodData}
                                                 period={props.period}
                                                 periodChangeHandler={props.periodChangeHandler} />
