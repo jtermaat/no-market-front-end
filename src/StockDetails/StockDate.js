@@ -133,18 +133,18 @@ const StockDate = (props) => {
                 <MediaQuery maxWidth={849} >
                     <MediaQuery minWidth={500}>
                         <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}> 
-                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toLocaleDateString()}</h3>
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toUTCString().split("00")[0]}</h3>
                         </div> 
                         
                     </MediaQuery>
                     <MediaQuery minWidth={400} maxWidth={499}>
                         <div className={`${styles.screentopmedium} ${styles['stock-title-mobile']}`}> 
-                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toLocaleDateString()}</h3>
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toUTCString().split("00")[0]}</h3>
                         </div> 
                     </MediaQuery>
                     <MediaQuery maxWidth={399}>
                         <div className={`${styles.screentopsmall} ${styles['stock-title-mobile']}`}> 
-                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toLocaleDateString()}</h3>
+                            <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toUTCString().split("00")[0]}</h3>
                         </div> 
                     </MediaQuery>
                 
