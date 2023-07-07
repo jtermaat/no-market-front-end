@@ -55,12 +55,10 @@ const StockDate = (props) => {
                 return response;
             }
         }).then(responseData => {
-            console.log(responseData);
             setDetailData(responseData);
             // setIsLoadingDetails(false);
             props.onDoneLoadingDetails();
         }).catch(e => {
-            console.log("ERROR!! " + e);
             setDetailData({
                 stockName: props.stockName,
                 stockFullName: props.stockName,

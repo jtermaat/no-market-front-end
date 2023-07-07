@@ -155,9 +155,7 @@ const PerformanceChart = (props) => {
       }
       props.updateDeviationData({gain: deviationData[deviationData.length-1] - deviationData[0], deviation: standardDeviation(deviationData), name: name});
       // console.log(deviationData[(deviationData.length-1)] - deviationData[0])
-      console.log('gain / deviation for ' + name + ': ' + (deviationData[(deviationData.length-1)] - deviationData[0]) / standardDeviation(deviationData));
-      // console.log(standardDeviation(deviationData));
-      // console.log(deviationData);
+     // console.log(deviationData);
       return returnData;
     }
 
@@ -167,7 +165,6 @@ const PerformanceChart = (props) => {
 
     const chartRef = useRef();
     const clickHandler = (event) => {
-      console.log(getElementAtEvent(chartRef.current, event));
       const element = getElementAtEvent(chartRef.current, event)[0];
       if (!!element) {
         const date = labels[element.index];
@@ -244,14 +241,11 @@ const PerformanceChart = (props) => {
       // console.log("Using effect.");
 
       if (rawData.length < dataSizeRef.current) {
-        console.log("Resetting bounds.");
         maxRef.current = DEFAULT_MAX;
         sizeRef.current = DEFAULT_SIZE;
         // chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
       } else if (rawData.length > dataSizeRef.current) {
-        console.log("Growing bounds.");
         const dataGrowthSize = rawData.length - dataSizeRef.current;
-        console.log("Data growth size: " + dataGrowthSize);
         if (!!chartRef.current) {
           // maxRef.current = 
           const percentChanges = rawData.map(item =>item.percentChange);
@@ -262,21 +256,14 @@ const PerformanceChart = (props) => {
           chartRef.current.data.datasets[0].data = prepProcessedData(min, max, percentChanges, 'model');
           chartRef.current.data.datasets[1].data = prepProcessedData(min, max, baselinePercentChanges, 'baseline');
           chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current)+dataGrowthSize, max: maxRef.current+dataGrowthSize}, 'default');
-          // chartRef.current.stop(); // make sure animations are not running
-          // chartRef.current.update('none');
-          
-          
-          console.log("zoomed to " + min + ", " + max);
         }
       } else {
         const percentChanges = rawData.map(item =>item.percentChange);
         const baselinePercentChanges = baselineRawData.map(item => item.percentChange);
         chartRef.current.zoomScale('x', {min: (maxRef.current-sizeRef.current), max: maxRef.current}, 'default');
-        console.log("No zoom.");
       }
       
       dataSizeRef.current = rawData.length;
-      console.log("Setting data size to " + rawData.length);
 
     });
 
@@ -348,8 +335,6 @@ const PerformanceChart = (props) => {
 
       maxRef.current=max;
       sizeRef.current=max-min;
-      console.log("max: " + maxRef.current);
-      console.log("size: " + sizeRef.current);
     // if (min == 0 && !props.isLoading) {
       if (min < DEFAULT_LOAD_THRESH && !needsMoreData) {
         // props.loadMoreDataHandler(chart, min, max);
@@ -412,11 +397,7 @@ const PerformanceChart = (props) => {
         onZoomComplete: zoomCompleteHandler
       }
     };
-
-    console.log('annotationData: ' + labels.indexOf(props.date) + ', ' + (maxRef.current - sizeRef.current));
-    console.log('labels: ' + labels);
-    console.log('props.date: ' + props.date);
-
+    
     const annotation = {
       type: "line",
       mode: "vertical",

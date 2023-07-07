@@ -31,7 +31,6 @@ const StockTable = (props) => {
             '&date=' + (!!props.date ? props.date : '0') + 
             '&searchString=' + searchString.current +
             '&page=' + page.current;
-            console.log(url);
             fetch(url).then(response => {
             return response.json();
         }).then(responseData => {

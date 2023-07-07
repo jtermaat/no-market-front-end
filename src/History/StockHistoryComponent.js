@@ -85,9 +85,7 @@ const StockHistoryComponent = (props) => {
         return returnVal;
     });
     outOfContextBenchmarkValues.push(product);
-    console.log('out of context benchmark values: ' + outOfContextBenchmarkValues);
     const benchmarkValues = startIndex < 0 ? [] : [...Array(startIndex).fill(null), ...outOfContextBenchmarkValues];
-    console.log("benchmark values length : " + benchmarkValues.length);
 
     // *********
     // GRAY ANNOTATIONS
@@ -248,9 +246,6 @@ const StockHistoryComponent = (props) => {
 
     const zoomCompleteHandler = (chart) => {
         const {min, max} = chart.chart.scales.x;
-        console.log('min: ' + min + ', max: ' + max);
-        console.log("Setting max to " + max);
-        console.log("Setting size to " + (max-min));
         maxRef.current=max;
         sizeRef.current=max-min;
       // if (min == 0 && !props.isLoading) {
