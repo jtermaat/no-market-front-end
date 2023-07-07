@@ -158,7 +158,7 @@ Enjoy exploring <i>O Market</i> responsibly as a resource to enhance your unders
 
 <br/>
 <h4>About Me</h4>
-My name is John TerMaat.  I'm a software engineer with a curious mind and a lot of interests.  <a href="https://www.instagram.com/raceyouanytime">Follow me on Instagram.</a> 
+My name is John TerMaat.  I'm a software engineer with a curious mind and a lot of interests.  Follow me on <a href="https://www.instagram.com/raceyouanytime">Instagram</a> and <a href="https://www.threads.net/@raceyouanytime">Threads.</a> 
 
 
                                                             </p>
