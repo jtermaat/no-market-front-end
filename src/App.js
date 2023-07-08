@@ -170,7 +170,8 @@ My name is John TerMaat.  I'm a software engineer with a curious mind and a lot 
                                                 period={period} 
                                                 date={selectedDate}
                                                 onStartedLoadingPerformance={onStartedLoadingPerformance}
-                                                onDoneLoadingPerformance={onDoneLoadingPerformance}/>}
+                                                onDoneLoadingPerformance={onDoneLoadingPerformance}
+                                                periodChangeHandler={periodChangeHandler}/>}
 
             {screen == SCREEN_ABOUT && <Explanation/>}
 

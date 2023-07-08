@@ -50,6 +50,19 @@ const PerformancePanel = (props) => {
                     <option value="50">50</option>
                     <option value="100">100</option>     
                 </select>
+                <label for="period" className={`${styles.label} ${styles.largetext}`}>Period: </label>
+                 <select className={`${styles.select} ${styles.largetext}`} name="periods" id="periods" onChange={props.periodChangeHandler} value={props.period}>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                        </select>
             </div>
             </MediaQuery>
             <MediaQuery minWidth={600} maxWidth={779}>
@@ -75,6 +88,19 @@ const PerformancePanel = (props) => {
                     <option value="50">50</option>
                     <option value="100">100</option>     
                 </select>
+                <label for="period" className={`${styles.label} ${styles.mediumtext}`}>Period: </label>
+                 <select className={`${styles.select} ${styles.mediumtext}`} name="periods" id="periods" onChange={props.periodChangeHandler} value={props.period}>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                        </select>
             </div>
 
         </MediaQuery>
@@ -101,6 +127,19 @@ const PerformancePanel = (props) => {
                     <option value="50">50</option>
                     <option value="100">100</option>     
                 </select>
+                <label for="period" className={`${styles.label} ${styles.smalltext}`}>Period: </label>
+                 <select className={`${styles.selectsmall} ${styles.smalltext}`} name="periods" id="periods" onChange={props.periodChangeHandler} value={props.period}>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                        </select>
             </div>
 
         </MediaQuery>
@@ -127,6 +166,19 @@ const PerformancePanel = (props) => {
                     <option value="50">50</option>
                     <option value="100">100</option>     
                 </select>
+                <label for="period" className={`${styles.label} ${styles.tinytext}`}>Period: </label>
+                 <select className={`${styles.selecttiny} ${styles.tinytext}`} name="periods" id="periods" onChange={props.periodChangeHandler} value={props.period}>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                        </select>
             </div>
 
         </MediaQuery>
