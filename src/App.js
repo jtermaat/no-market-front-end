@@ -150,9 +150,9 @@ const App = () => {
             <p>
                                                             <h4 className={styles.centertext}>Welcome to <i>O Market, Where Art Thou</i> </h4>
 
-<i>O Market</i> is a web platform created by <a href="https://www.instagram.com/raceyouanytime">John TerMaat</a> that uses machine learning to provide educational and academic insights about individual stocks in the S&P 500. Please note that <i>O Market</i> does not offer financial advice. The information and predictions provided are for educational purposes only. They should not be considered as a substitute for professional financial advice or used as the sole basis for investment decisions.<br/><br/>
+<i>O Market</i> is a tool by <a href="https://www.instagram.com/raceyouanytime">John TerMaat</a> that uses a proprietary novel algorithm to provide educational and academic insights about individual stocks in the S&P 500. <i>O Market</i> does not offer financial advice. The information and predictions provided are for educational purposes only. They should not be considered a substitute for professional financial advice or used as the sole basis for investment decisions.<br/><br/>
 
-Investing in stocks carries risks, and past performance is not indicative of future results. You are responsible for your own investment decisions, and <i>O Market</i> recommends consulting a qualified financial advisor. <i>O Market</i> does not guarantee the accuracy of predictions or assume liability for any financial losses incurred from using our platform.<br/><br/>
+Investing in stocks carries risks, and past performance is not indicative of future results. You are responsible for your own investment decisions, and <i>O Market</i> recommends consulting a qualified financial advisor. <i>O Market</i> does not guarantee the accuracy of predictions or assume liability for any financial losses incurred from visiting our platform.<br/><br/>
 
 Enjoy exploring <i>O Market</i> responsibly as a resource to enhance your understanding of the stock market.  For more information, use the menu on the top-right to navigate to the "Explanation" page.
 
