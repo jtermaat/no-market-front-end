@@ -147,7 +147,7 @@ const App = () => {
                                                                                 onDoneLoadingHistory={onDoneLoadingHistory}
                                                                                 onStartedLoadingHistory={onStartedLoadingHistory} />}
             {!selectedStock && screen == SCREEN_DATA && <div className={styles.screentop} >
-            <p>
+            <p className={styles.maintext}>
                                                             <h4 className={styles.centertext}>Welcome to <i>O Market, Where Art Thou</i> </h4>
                                                             <h4 className={styles.centertext}><a href="https://www.youtube.com/watch?v=wPc586Rxu10" target="_blank" rel="noopener noreferrer">Watch the explainer video</a></h4>
 
