@@ -149,6 +149,7 @@ const App = () => {
             {!selectedStock && screen == SCREEN_DATA && <div className={styles.screentop} >
             <p>
                                                             <h4 className={styles.centertext}>Welcome to <i>O Market, Where Art Thou</i> </h4>
+                                                            <h4 className={styles.centertext}><a href="https://www.youtube.com/watch?v=wPc586Rxu10" target="_blank" rel="noopener noreferrer">Watch the explainer video</a></h4>
 
 <i>O Market</i> is a tool by <a href="https://www.instagram.com/raceyouanytime">John TerMaat</a> that uses a proprietary novel algorithm to provide educational and academic insights about individual stocks in the S&P 500. <i>O Market</i> does not offer financial advice. The information and predictions provided are for educational purposes only. They should not be considered a substitute for professional financial advice or used as the sole basis for investment decisions.<br/><br/>
 
