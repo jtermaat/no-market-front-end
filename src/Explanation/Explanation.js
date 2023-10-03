@@ -15,8 +15,6 @@ const Explanation = (props) => {
             <MediaQuery maxWidth={499} >
             <iframe className={styles.videosmall} width="300" height="200" src="https://www.youtube.com/embed/wPc586Rxu10" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </MediaQuery>
-            
-            {/* <img src="../../../explainer.png" alt="explainer image" className={styles.image}></img> */}
         </React.Fragment>
     );
 };

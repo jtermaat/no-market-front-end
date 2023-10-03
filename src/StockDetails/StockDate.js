@@ -9,8 +9,6 @@ import styles from './StockDate.module.css';
 import MediaQuery from 'react-responsive';
 
 const StockDate = (props) => {
-    // const [stockName, setStockName] = useState('');
-    // const [date, setDate] = useState(null);
     const [periodData, setPeriodData] = useState([]);
     const [isLoadingPeriods, setIsLoadingPeriods] = useState(true);
     const [detailData, setDetailData] = useState({});
@@ -23,31 +21,26 @@ const StockDate = (props) => {
 
     let periodError = useRef(false);
     let detailError = useRef(false);
-    // let periodData = useRef(0);
 
     const loadPeriodData = () => {
-        // const realDate = !props.date ? null : props.date.getFullYear() + "-" + props.date.getMonth() + "-" + props.date.getDate();
-        // setIsLoadingPeriods(true);
         props.onStartedLoadingPeriods();
         periodError.current = false;
-        // fetch('http://localhost:8080/prediction/stock/' + props.stockName + '/' + props.date).then(response => {
-        fetch('https://wn5oloaa27.execute-api.us-east-1.amazonaws.com/default/getStockDate?stockName=' + props.stockName + 
-                '&date=' + props.date).then(response => {
-            return response.json();
-        }).then(responseData => {
-            setPeriodData(responseData.sort((a,b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
-            setIsLoadingPeriods(false);
-            props.onDoneLoadingPeriods();
-        }).catch(error => {
-            periodError.current = true;
-        });
+        fetch('https://wn5oloaa27.execute-api.us-east-1.amazonaws.com/default/getStockDate?stockName=' + props.stockName +
+            '&date=' + props.date).then(response => {
+                return response.json();
+            }).then(responseData => {
+                setPeriodData(responseData.sort((a, b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
+                setIsLoadingPeriods(false);
+                props.onDoneLoadingPeriods();
+            }).catch(error => {
+                periodError.current = true;
+            });
     }
 
     const loadDetailData = () => {
         setIsLoadingDetails(true);
         props.onStartedLoadingDetails();
         detailError.current = false;
-        // fetch('http://localhost:8080/stock-details/' + props.stockName).then(response => {
         fetch(' https://mcgnbffws5.execute-api.us-east-1.amazonaws.com/default/getStockDetails?stockName=' + props.stockName).then(response => {
             if (response.status == 200) {
                 return response.json();
@@ -71,21 +64,15 @@ const StockDate = (props) => {
         });
     }
 
-    // useEffect(() => {
-        // let needPeriodData = false;
-        // let needDetailData = false;
-        if (date.current !== props.date && props.date !== null) {
-            date.current = props.date;
-            needPeriodData.current = true;
-        }
-        if (stockName.current !== props.stockName) {
-            // setStockName(props.stockName);
-            stockName.current = props.stockName;
-            needPeriodData.current = true;
-            needDetailData.current = true;
-        }
-
-    // });
+    if (date.current !== props.date && props.date !== null) {
+        date.current = props.date;
+        needPeriodData.current = true;
+    }
+    if (stockName.current !== props.stockName) {
+        stockName.current = props.stockName;
+        needPeriodData.current = true;
+        needDetailData.current = true;
+    }
 
     useEffect(() => {
         if (needPeriodData.current) {
@@ -102,81 +89,81 @@ const StockDate = (props) => {
         <React.Fragment>
             <div>
                 <MediaQuery minWidth={850} >
-                <div className={`${styles.screentop} ${styles['stock-title']}`}> 
-                    <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
-                </div> 
-                <div className={`${styles['details-parent']}`}>
-                    <MediaQuery minWidth={1080}>
-                        <div className={`${styles['details-child-left']}`}>
-                            <StockDetails data={detailData} />
-                        </div>
-                        <div className={`${styles['details-child-right']}`}>
-                            <PeriodScoresChart data={periodData}
-                                                period={props.period}
-                                                periodChangeHandler={props.periodChangeHandler} />
-                        </div>  
-                    </MediaQuery>
-                    <MediaQuery maxWidth={1079}>
-                    <div className={`${styles['details-parent-1']} ${styles['details-full']}`}>
-                            <StockDetails data={detailData} />
-                        </div>
-                        <div className={`${styles['details-child']}`}>
-                            <PeriodScoresChart data={periodData}
-                                                period={props.period}
-                                                periodChangeHandler={props.periodChangeHandler} />
-                        </div>
-                    </MediaQuery>
-                </div>
+                    <div className={`${styles.screentop} ${styles['stock-title']}`}>
+                        <h1 ><b>{detailData.stockFullName}</b> ({detailData.stockName})</h1>
+                    </div>
+                    <div className={`${styles['details-parent']}`}>
+                        <MediaQuery minWidth={1080}>
+                            <div className={`${styles['details-child-left']}`}>
+                                <StockDetails data={detailData} />
+                            </div>
+                            <div className={`${styles['details-child-right']}`}>
+                                <PeriodScoresChart data={periodData}
+                                    period={props.period}
+                                    periodChangeHandler={props.periodChangeHandler} />
+                            </div>
+                        </MediaQuery>
+                        <MediaQuery maxWidth={1079}>
+                            <div className={`${styles['details-parent-1']} ${styles['details-full']}`}>
+                                <StockDetails data={detailData} />
+                            </div>
+                            <div className={`${styles['details-child']}`}>
+                                <PeriodScoresChart data={periodData}
+                                    period={props.period}
+                                    periodChangeHandler={props.periodChangeHandler} />
+                            </div>
+                        </MediaQuery>
+                    </div>
                 </MediaQuery>
                 <MediaQuery maxWidth={849} >
                     <MediaQuery minWidth={500}>
-                        <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}> 
+                        <div className={`${styles.screentop} ${styles['stock-title-mobile']}`}>
                             <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toUTCString().split("00")[0]}</h3>
-                        </div> 
-                        
+                        </div>
+
                     </MediaQuery>
                     <MediaQuery minWidth={400} maxWidth={499}>
-                        <div className={`${styles.screentopmedium} ${styles['stock-title-mobile']}`}> 
+                        <div className={`${styles.screentopmedium} ${styles['stock-title-mobile']}`}>
                             <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toUTCString().split("00")[0]}</h3>
-                        </div> 
+                        </div>
                     </MediaQuery>
                     <MediaQuery maxWidth={399}>
-                        <div className={`${styles.screentopsmall} ${styles['stock-title-mobile']}`}> 
+                        <div className={`${styles.screentopsmall} ${styles['stock-title-mobile']}`}>
                             <h3 ><b>{detailData.stockFullName}</b> ({detailData.stockName}) - {new Date(props.date).toUTCString().split("00")[0]}</h3>
-                        </div> 
-                    </MediaQuery>
-                
-                <div className={`${styles['details-parent-mobile']}`}>
-                    <MediaQuery minWidth={1080}>
-                        <div className={`${styles['details-child-left']}`}>
-                            <StockDetails data={detailData} />
                         </div>
-                        <div className={`${styles['details-child-right']}`}>
-                            <PeriodScoresChart data={periodData}
-                                                period={props.period}
-                                                periodChangeHandler={props.periodChangeHandler} />
-                        </div>  
                     </MediaQuery>
-                    <MediaQuery maxWidth={1079}>
-                        <MediaQuery minWidth={500}>
-                        <div className={`${styles['details-parent-1']} ${styles['details-mobile']} ${styles['details-full']}`}>
-                            <StockDetails data={detailData} />
-                        </div>
+
+                    <div className={`${styles['details-parent-mobile']}`}>
+                        <MediaQuery minWidth={1080}>
+                            <div className={`${styles['details-child-left']}`}>
+                                <StockDetails data={detailData} />
+                            </div>
+                            <div className={`${styles['details-child-right']}`}>
+                                <PeriodScoresChart data={periodData}
+                                    period={props.period}
+                                    periodChangeHandler={props.periodChangeHandler} />
+                            </div>
                         </MediaQuery>
-                        <MediaQuery maxWidth={499}>
-                        <div className={`${styles['details-parent-1']} ${styles['details-tiny']} ${styles['details-full']}`}>
-                            <StockDetails data={detailData} />
-                        </div>
+                        <MediaQuery maxWidth={1079}>
+                            <MediaQuery minWidth={500}>
+                                <div className={`${styles['details-parent-1']} ${styles['details-mobile']} ${styles['details-full']}`}>
+                                    <StockDetails data={detailData} />
+                                </div>
+                            </MediaQuery>
+                            <MediaQuery maxWidth={499}>
+                                <div className={`${styles['details-parent-1']} ${styles['details-tiny']} ${styles['details-full']}`}>
+                                    <StockDetails data={detailData} />
+                                </div>
+                            </MediaQuery>
+                            <div className={`${styles['details-parent-mobile']} ${styles['details-full']}`}>
+                                <PeriodScoresChart data={periodData}
+                                    period={props.period}
+                                    periodChangeHandler={props.periodChangeHandler} />
+                            </div>
                         </MediaQuery>
-                        <div className={`${styles['details-parent-mobile']} ${styles['details-full']}`}>
-                            <PeriodScoresChart data={periodData}
-                                                period={props.period}
-                                                periodChangeHandler={props.periodChangeHandler} />
-                        </div>
-                    </MediaQuery>
-                </div>
+                    </div>
                 </MediaQuery>
-                
+
             </div>
         </React.Fragment>
     );

@@ -9,7 +9,6 @@ const Spinner = (props) => {
     return (
         <div className={styles.spinnerbox} >
             <FontAwesomeIcon className={styles.spinner} icon="fas fa-circle-notch fa-spin" size="6x" />
-            {/* <FontAwesomeIcon className={styles.spinner} icon="fas fa-dharmachakra fa-spin" size="6x" /> */}
         </div>
     );
 };
