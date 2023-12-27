@@ -7,6 +7,7 @@ import StockDetails from './StockDetails';
 import Spinner from '../Common/Spinner';
 import styles from './StockDate.module.css';
 import MediaQuery from 'react-responsive';
+import UrlFetcher from '../Common/UrlFetcher';
 
 const StockDate = (props) => {
     const [periodData, setPeriodData] = useState([]);
@@ -25,8 +26,7 @@ const StockDate = (props) => {
     const loadPeriodData = () => {
         props.onStartedLoadingPeriods();
         periodError.current = false;
-        fetch('https://wn5oloaa27.execute-api.us-east-1.amazonaws.com/default/getStockDate?stockName=' + props.stockName +
-            '&date=' + props.date).then(response => {
+        fetch(UrlFetcher.getStockDateUrl(props.stockname, props.date)).then(response => {
                 return response.json();
             }).then(responseData => {
                 setPeriodData(responseData.sort((a, b) => a.period < b.period ? -1 : a.period > b.period ? 1 : 0));
@@ -41,7 +41,7 @@ const StockDate = (props) => {
         setIsLoadingDetails(true);
         props.onStartedLoadingDetails();
         detailError.current = false;
-        fetch(' https://mcgnbffws5.execute-api.us-east-1.amazonaws.com/default/getStockDetails?stockName=' + props.stockName).then(response => {
+        fetch(UrlFetcher.getStockDetailsUrl(props.stockName)).then(response => {
             if (response.status == 200) {
                 return response.json();
             } else {

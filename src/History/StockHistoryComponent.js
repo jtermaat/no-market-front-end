@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 // import StockHistoryChart from './StockHistoryChart';
 import Spinner from '../Common/Spinner';
+import UrlFetcher from '../Common/UrlFetcher';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -138,8 +139,7 @@ const StockHistoryComponent = (props) => {
     if (!isWaiting.current) {
       isStockHistoryError.current = false;
       isWaiting.current = true;
-      fetch(' https://6tzw64t9eb.execute-api.us-east-1.amazonaws.com/default/getStockHistory?stockName=' + props.stockName +
-        '&period=' + props.period + '&page=' + 0).then(response => {
+      fetch(UrlFetcher.getStockHistoryUrl(props.stockName, props.period, 0)).then(response => {
           return response.json();
         }).then(responseData => {
           setPage(1);
@@ -163,7 +163,7 @@ const StockHistoryComponent = (props) => {
 
   const loadBenchmarkData = () => {
     isPerformanceDataError.current = false;
-    fetch('https://0w55vqldgh.execute-api.us-east-1.amazonaws.com/default/getPerformanceForDate?period=1&numPicks=5000&date=' + props.date).then(response => {
+    fetch(UrlFetcher.getPerformanceUrl(1, 5000, props.date)).then(response => {
       return response.json();
     }).then(responseData => {
       if (responseData.length == 0) {
@@ -185,8 +185,7 @@ const StockHistoryComponent = (props) => {
     if (needsMoreData && !isWaiting.current) {
       isStockHistoryError.current = false;
       isWaiting.current = true;
-      fetch(' https://6tzw64t9eb.execute-api.us-east-1.amazonaws.com/default/getStockHistory?stockName=' + props.stockName +
-        '&period=' + props.period + '&page=' + page).then(response => {
+      fetch(UrlFetcher.getStockHistoryUrl(props.stockName, props.period, page)).then(response => {
           return response.json();
         }).then(responseData => {
           setPage(page + 1);

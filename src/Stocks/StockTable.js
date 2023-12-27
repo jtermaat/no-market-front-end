@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar";
 import { useState, useEffect, useRef, memo } from "react";
 import styles from './StockTable.module.scss';
 import MediaQuery from "react-responsive";
+import UrlFetcher from "../Common/UrlFetcher";
 
 const EMPTY_SEARCH_STRING = '0';
 
@@ -23,10 +24,7 @@ const StockTable = (props) => {
     const loadData = () => {
         needsData.current = false;
         dataError.current = false;
-        const url = 'https://9hvq4fznse.execute-api.us-east-1.amazonaws.com/default/getStockList?period=' + props.period +
-            '&date=' + (!!props.date ? props.date : '0') +
-            '&searchString=' + searchString.current +
-            '&page=' + page.current;
+        const url = UrlFetcher.getStockTableUrl(props.period, props.date, searchString.current, page.current);
         fetch(url).then(response => {
             return response.json();
         }).then(responseData => {

@@ -15,6 +15,7 @@ import Zoom from 'chartjs-plugin-zoom';
 import standardDeviation from './StandardDeviation';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { useMediaQuery } from 'react-responsive';
+import UrlFetcher from '../Common/UrlFetcher';
 
 
 ChartJS.register(
@@ -119,11 +120,10 @@ const PerformanceChart = (props) => {
     if (!isWaiting.current) {
       isWaiting.current = true;
       props.onStartedLoadingPerformance();
-      const promise1 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=' + props.period +
-        '&numPicks=' + props.numPicks + '&page=' + 0).then(response => {
+      const promise1 = fetch(UrlFetcher.getPerformanceUrl(props.period, props.numPicks, 0)).then(response => {
           return response.json();
         });
-      const promise2 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=1&numPicks=5000&page=0').then(response => {
+      const promise2 = fetch(UrlFetcher.getPerformanceUrl(1, 5000, 0)).then(response => {
         return response.json();
       });
       Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
@@ -179,13 +179,11 @@ const PerformanceChart = (props) => {
   const loadMoreData = (chart) => {
     if (!loadingMoreRef.current) {
       loadingMoreRef.current = true;
-      const promise1 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=' + props.period +
-        '&numPicks=' + props.numPicks + '&page=' + page).then(response => {
+      const promise1 = fetch(UrlFetcher.getPerformanceUrl(props.period, props.numPicks, page)).then(response => {
 
           return response.json();
         });
-      const promise2 = fetch('https://o4f1k8x2fb.execute-api.us-east-1.amazonaws.com/default/getPerformance?period=1&numPicks=5000&page='
-        + page).then(response => {
+      const promise2 = fetch(UrlFetcher.getPerformanceUrl(1, 5000, page)).then(response => {
           return response.json();
         });
       Promise.all([promise1, promise2]).then(([responseData1, responseData2]) => {
